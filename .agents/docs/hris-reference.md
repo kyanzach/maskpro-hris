@@ -128,3 +128,7 @@ All server configurations, project files, application logic, and database connec
 - **Never default to UTC**.
 - Force Node.js/PHP processes to strictly use `Asia/Manila`.
 - Since biometric punches are extremely time-sensitive (Lates/Undertime calculation), timezone discrepancy will silently corrupt HR data.
+
+### 🎨 UI & Styling Standards
+- **Modern Date Inputs**: DO NOT use standard default HTML5 date inputs alone. All date ranges (e.g., Leave Requests, Attendance range) MUST use a modernized "flight/hotel booking" continuous style (two inputs connected visually as a single block) with clear "Check-Out"/"Return" or "Start"/"End" micro-labels floating above the inputs.
+- **Glassmorphism**: Default to glassmorphism UI cards and gradient primary buttons for premium aesthetics.

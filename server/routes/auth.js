@@ -63,4 +63,54 @@ router.post('/login', async (req, res) => {
     }
 });
 
+const { authorize } = require('../middleware/auth');
+
+// POST /api/auth/impersonate
+router.post('/impersonate', authorize(['admin']), async (req, res) => {
+    try {
+        const { target_user_id } = req.body;
+        const impersonator = req.user; // The admin doing the impersonation
+
+        if (!target_user_id) {
+            return res.status(400).json({ success: false, message: 'Missing target_user_id' });
+        }
+
+        // Fetch target user details
+        const [rows] = await pool.query('SELECT * FROM users WHERE id = ? AND is_active = 1', [target_user_id]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'User not found or inactive' });
+        }
+
+        const user = rows[0];
+
+        // Generate a new JWT token for the target user, but attach an impersonator flag
+        const payload = {
+            id: user.id,
+            username: user.username,
+            full_name: user.full_name,
+            access_level: user.access_level,
+            branch_id: user.branch_id,
+            impersonator: {
+                id: impersonator.id,
+                username: impersonator.username,
+                full_name: impersonator.full_name
+            }
+        };
+
+        const secret = process.env.JWT_SECRET || 'maskpro_hris_secret_key';
+        const token = jwt.sign(payload, secret, { expiresIn: '1h' }); // Shorter expiry for impersonation
+
+        res.json({
+            success: true,
+            token,
+            user: payload
+        });
+
+    } catch (error) {
+        console.error('Impersonation error:', error);
+        res.status(500).json({ success: false, message: 'Server error during impersonation' });
+    }
+});
+
 module.exports = router;

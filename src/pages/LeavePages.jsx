@@ -44,20 +44,34 @@ export const LeaveStatus = () => {
 export const LeaveRequest = () => (
   <div style={{ padding: '2rem' }}>
     <div style={{ marginBottom: '2rem' }}><h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: '800' }}>File Leave Request</h1><p style={{ color: '#64748b', margin: '4px 0 0 0' }}>Submit a new leave application</p></div>
-    <div style={{ ...card, padding: '32px', maxWidth: '600px' }}>
-      <div style={{ marginBottom: '20px' }}><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Leave Type</label>
-        <select style={{ width: '100%', padding: '12px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '14px', fontFamily: 'inherit', background: '#f8fafc' }}>
+    <div style={{ ...card, padding: '32px', maxWidth: '650px' }}>
+      <div style={{ marginBottom: '24px' }}><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Leave Type</label>
+        <select style={{ width: '100%', padding: '14px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px', fontFamily: 'inherit', background: '#f8fafc', color: '#1e293b', fontWeight: '500', outline: 'none', transition: 'border-color 0.2s' }}>
           <option>Vacation Leave</option><option>Sick Leave</option><option>Unpaid Leave</option><option>Maternity Leave</option><option>Paternity Leave</option>
-        </select></div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-        <div><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Start Date</label>
-          <input type="date" style={{ width: '100%', padding: '12px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '14px', fontFamily: 'inherit', background: '#f8fafc' }} /></div>
-        <div><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>End Date</label>
-          <input type="date" style={{ width: '100%', padding: '12px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '14px', fontFamily: 'inherit', background: '#f8fafc' }} /></div>
+        </select>
       </div>
-      <div style={{ marginBottom: '24px' }}><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Reason</label>
-        <textarea rows="3" style={{ width: '100%', padding: '12px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '14px', fontFamily: 'inherit', background: '#f8fafc', resize: 'vertical' }} placeholder="Briefly describe why you need leave..." /></div>
-      <button style={{ ...btn, width: '100%' }}>Submit Request</button>
+      
+      {/* Modern Flight-Style Date Range Picker */}
+      <div style={{ marginBottom: '24px' }}>
+        <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Date Range</label>
+        <div style={{ display: 'flex', alignItems: 'center', background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '14px', overflow: 'hidden', transition: 'border-color 0.2s', padding: '4px' }}>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '12px', left: '16px', color: '#94a3b8' }}><CalendarDays size={18} /></div>
+            <input type="date" style={{ width: '100%', padding: '14px 16px 14px 44px', border: 'none', background: 'transparent', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', fontWeight: '500', outline: 'none' }} />
+            <div style={{ position: 'absolute', top: '4px', right: '0', bottom: '4px', width: '1px', background: '#e2e8f0' }} />
+            <span style={{ position: 'absolute', top: '-10px', left: '44px', fontSize: '10px', fontWeight: '700', color: '#6366f1', textTransform: 'uppercase', background: '#f8fafc', padding: '0 4px', borderRadius: '4px' }}>Check-Out</span>
+          </div>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <div style={{ position: 'absolute', top: '12px', left: '16px', color: '#94a3b8' }}><CalendarDays size={18} /></div>
+            <input type="date" style={{ width: '100%', padding: '14px 16px 14px 44px', border: 'none', background: 'transparent', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', fontWeight: '500', outline: 'none' }} />
+            <span style={{ position: 'absolute', top: '-10px', left: '44px', fontSize: '10px', fontWeight: '700', color: '#10b981', textTransform: 'uppercase', background: '#f8fafc', padding: '0 4px', borderRadius: '4px' }}>Return</span>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginBottom: '32px' }}><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Reason</label>
+        <textarea rows="3" style={{ width: '100%', padding: '14px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '15px', fontFamily: 'inherit', background: '#f8fafc', resize: 'vertical', color: '#1e293b', outline: 'none' }} placeholder="Briefly describe why you need leave..." /></div>
+      <button style={{ ...btn, width: '100%', padding: '16px', fontSize: '16px' }}>Submit Request</button>
     </div>
   </div>
 );

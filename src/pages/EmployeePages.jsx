@@ -8,7 +8,7 @@ const th = { padding: '14px 20px', fontSize: '12px', fontWeight: '600', color: '
 const td = { padding: '16px 20px', borderBottom: '1px solid rgba(99,102,241,0.06)', fontSize: '14px' };
 
 export const AllEmployees = () => {
-  const { user } = useContext(AuthContext);
+  const { user, impersonate } = useContext(AuthContext);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -57,7 +57,25 @@ export const AllEmployees = () => {
                   <td style={td}><span style={{ padding: '4px 12px', background: '#f1f5f9', borderRadius: '99px', fontSize: '13px' }}>{emp.unify_job_title || emp.access_level}</span></td>
                   <td style={{ ...td, color: '#64748b' }}>{emp.department_name || '—'}</td>
                   <td style={td}>{emp.is_active ? <span className="badge badge-success">Active</span> : <span className="badge badge-danger">Inactive</span>}</td>
-                  {['ryan','karen'].includes(user?.username) && <td style={{ ...td, fontWeight: '600' }}>₱{emp.base_hourly_rate || '0.00'}/hr</td>}
+                  {['ryan','karen'].includes(user?.username) && (
+                    <td style={td}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontWeight: '600' }}>₱{emp.base_hourly_rate || '0.00'}/hr</span>
+                        {emp.username !== user?.username && (
+                          <button onClick={() => {
+                            if (window.confirm(`Login as ${emp.full_name}?`)) {
+                              impersonate(emp.user_id).then(res => {
+                                if (res.success) window.location.reload();
+                                else alert(res.message);
+                              });
+                            }
+                          }} style={{ background: '#f8fafc', color: '#6366f1', border: '1px solid #e2e8f0', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', cursor: 'pointer', fontWeight: '600', transition: 'all 0.2s' }}>
+                            Login As
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
           </tbody>

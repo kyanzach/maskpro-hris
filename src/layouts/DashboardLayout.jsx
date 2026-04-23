@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 const DashboardLayout = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, revertImpersonation } = useContext(AuthContext);
   const navigate = useNavigate();
   const [expandedMenus, setExpandedMenus] = React.useState({});
 
@@ -138,6 +138,12 @@ const DashboardLayout = () => {
           <div>
             <h2 style={{ fontSize: '1.125rem', fontWeight: '700', margin: 0, background: 'linear-gradient(135deg, #6366f1, #4f46e5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>HRIS Portal</h2>
           </div>
+          {user?.impersonator && (
+            <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', padding: '6px 16px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <span style={{ fontSize: '13px', color: '#991b1b', fontWeight: '500' }}>Viewing as <strong>{user.full_name}</strong></span>
+              <button onClick={() => { revertImpersonation(); window.location.reload(); }} style={{ background: '#ef4444', color: 'white', border: 'none', padding: '4px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}>Go Back</button>
+            </div>
+          )}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div style={{ position: 'relative', cursor: 'pointer', padding: '8px', borderRadius: '12px', background: 'rgba(99, 102, 241, 0.06)' }}>
               <Bell size={18} color="#6366f1" />

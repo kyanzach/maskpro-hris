@@ -1,3 +1,11 @@
+## [v1.3.0] — 2026-04-23
+### Added / Changed / Fixed
+- Seeded production database with functional departments and correctly mapped 23 employees
+- Fixed API queries to filter out inactive users from HRIS views
+- Added Admin Impersonation feature ("Login As") with "Go Back" functionality
+- Modernized Leave Request date picker to a continuous "flight/hotel" style UI
+- Fixed Org Structure to display real operational branches
+
 ## [v1.2.0] — 2026-04-23
 ### Added
 - Built all 30+ HRIS pages with premium glassmorphism UI matching MaskPro Care design

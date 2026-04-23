@@ -141,26 +141,47 @@ export const UsersRoles = () => {
   );
 };
 
-export const OrgStructure = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1 style={{ margin: '0 0 8px 0', fontSize: '1.75rem', fontWeight: '800' }}>Org. Structure</h1>
-    <p style={{ color: '#64748b', marginBottom: '2rem' }}>Company hierarchy and reporting lines</p>
-    <div style={{ ...card, padding: '48px' }}>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ display: 'inline-block', padding: '16px 32px', background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: 'white', borderRadius: '16px', fontWeight: '700', marginBottom: '24px', boxShadow: '0 8px 25px rgba(99,102,241,0.3)' }}>CEO / Owner</div>
-        <div style={{ width: '2px', height: '32px', background: '#e2e8f0', margin: '0 auto' }} />
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '0' }}>
-          {['Operations Manager', 'Branch Manager (Cebu)', 'Branch Manager (CDO)'].map(role => (
-            <div key={role} style={{ textAlign: 'center' }}>
-              <div style={{ width: '2px', height: '24px', background: '#e2e8f0', margin: '0 auto' }} />
-              <div style={{ padding: '12px 20px', background: '#f1f5f9', borderRadius: '12px', fontSize: '13px', fontWeight: '600', border: '1px solid #e2e8f0' }}>{role}</div>
-            </div>
-          ))}
+export const OrgStructure = () => {
+  const [employees, setEmployees] = useState([]);
+  useEffect(() => {
+    fetch('/api/employees', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+      .then(r => r.json()).then(d => setEmployees(d.data || [])).catch(() => {});
+  }, []);
+  const depts = {};
+  employees.forEach(e => { const d = e.department_name || 'Unassigned'; if (!depts[d]) depts[d] = []; depts[d].push(e); });
+  const nodeStyle = (bg) => ({ padding: '12px 20px', background: bg, borderRadius: '14px', fontSize: '13px', fontWeight: '600', textAlign: 'center', minWidth: '140px' });
+  return (
+    <div style={{ padding: '2rem' }}>
+      <h1 style={{ margin: '0 0 8px 0', fontSize: '1.75rem', fontWeight: '800' }}>Org. Structure</h1>
+      <p style={{ color: '#64748b', marginBottom: '2rem' }}>Company hierarchy and reporting lines</p>
+      <div style={{ ...card, padding: '48px', overflowX: 'auto' }}>
+        <div style={{ textAlign: 'center', minWidth: '700px' }}>
+          <div style={nodeStyle('linear-gradient(135deg, #6366f1, #4f46e5)')}>
+            <span style={{ color: 'white' }}>Ryan & Karen Paco</span>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>Owners / Admin</div>
+          </div>
+          <div style={{ width: '2px', height: '32px', background: '#e2e8f0', margin: '0 auto' }} />
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+            {[{ name: 'Davao Obrero', color: '#10b981' }, { name: 'Gensan', color: '#f59e0b' }, { name: 'Davao Ecoland', color: '#06b6d4' }].map(b => (
+              <div key={b.name} style={{ textAlign: 'center' }}>
+                <div style={{ width: '2px', height: '24px', background: '#e2e8f0', margin: '0 auto' }} />
+                <div style={{ ...nodeStyle(`${b.color}15`), border: `2px solid ${b.color}`, color: b.color }}>{b.name} Branch</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ width: '2px', height: '32px', background: '#e2e8f0', margin: '16px auto 0' }} />
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginTop: '0' }}>
+            {Object.entries(depts).map(([dept, members]) => (
+              <div key={dept} style={{ ...nodeStyle('#f1f5f9'), border: '1px solid #e2e8f0', color: '#374151' }}>
+                {dept} <span style={{ color: '#94a3b8', fontWeight: '400' }}>({members.length})</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const BiometricManager = () => (
   <div style={{ padding: '2rem' }}>

@@ -33,6 +33,7 @@ router.get('/', authorize(), async (req, res) => {
             LEFT JOIN hr_designations des ON h.designation_id = des.id
             LEFT JOIN hr_employment_statuses s ON h.employment_status_id = s.id
             LEFT JOIN hr_shifts sh ON h.shift_id = sh.id
+            WHERE u.is_active = 1
             ORDER BY u.full_name ASC
         `;
         

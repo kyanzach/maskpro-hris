@@ -19,12 +19,26 @@ const employeeRoutes = require('./routes/employees');
 const shiftRoutes = require('./routes/shifts');
 const attendanceRoutes = require('./routes/attendance');
 const leaveRoutes = require('./routes/leaves');
+const departmentRoutes = require('./routes/departments');
+const designationRoutes = require('./routes/designations');
+const holidayRoutes = require('./routes/holidays');
+const dashboardRoutes = require('./routes/dashboard');
+const employmentStatusRoutes = require('./routes/employmentStatuses');
+const announcementRoutes = require('./routes/announcements');
+const assetRoutes = require('./routes/assets');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/shifts', shiftRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/leaves', leaveRoutes);
+app.use('/api/departments', departmentRoutes);
+app.use('/api/designations', designationRoutes);
+app.use('/api/holidays', holidayRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/employment-statuses', employmentStatusRoutes);
+app.use('/api/announcements', announcementRoutes);
+app.use('/api/assets', assetRoutes);
 
 // Basic Health Check Route
 app.get('/api/health', async (req, res) => {

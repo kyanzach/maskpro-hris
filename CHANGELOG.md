@@ -1,3 +1,10 @@
+## [v1.3.4] — 2026-04-23
+### Added / Changed / Fixed
+- **UI/UX:** Fully implemented interactive Add/Edit UI Modals for the `Departments`, `Designations`, `EmploymentStatus`, and `WorkShifts` components.
+- **UI/UX:** Added interactive Add/Edit Modals for `Holiday` management.
+- **Logic:** Updated `AllEmployees` component to include an "HR Profile" edit button that allows admin/hr to link Unify users with specific departments, designations, shifts, and biometric UIDs.
+- **Logic:** Fixed the `GET /api/designations` route to properly join the `hr_departments` table so department names map correctly in the frontend.
+
 ## [v1.3.3] — 2026-04-23
 ### Added / Changed / Fixed
 - **Security:** Implemented comprehensive Role-Based Access Control (RBAC) in the frontend navigation to hide sensitive settings, admin panels, and payroll configurations from standard employees based on their Unify `access_level`.

@@ -7,9 +7,10 @@ const { authorize } = require('../middleware/auth');
 router.get('/', authorize(), async (req, res) => {
     try {
         const [designations] = await pool.query(`
-            SELECT * 
-            FROM hr_designations 
-            ORDER BY name ASC
+            SELECT ds.*, dp.name as department_name 
+            FROM hr_designations ds
+            LEFT JOIN hr_departments dp ON ds.department_id = dp.id
+            ORDER BY ds.name ASC
         `);
         res.json({ success: true, data: designations });
     } catch (error) {
@@ -21,10 +22,10 @@ router.get('/', authorize(), async (req, res) => {
 // POST create designation
 router.post('/', authorize(['admin']), async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, description, department_id } = req.body;
         const [result] = await pool.query(
-            'INSERT INTO hr_designations (name, description) VALUES (?, ?)',
-            [name, description]
+            'INSERT INTO hr_designations (name, description, department_id) VALUES (?, ?, ?)',
+            [name, description, department_id || null]
         );
         res.json({ success: true, message: 'Designation created', id: result.insertId });
     } catch (error) {
@@ -36,10 +37,10 @@ router.post('/', authorize(['admin']), async (req, res) => {
 // PUT update designation
 router.put('/:id', authorize(['admin']), async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, description, department_id } = req.body;
         await pool.query(
-            'UPDATE hr_designations SET name = ?, description = ? WHERE id = ?',
-            [name, description, req.params.id]
+            'UPDATE hr_designations SET name = ?, description = ?, department_id = ? WHERE id = ?',
+            [name, description, department_id || null, req.params.id]
         );
         res.json({ success: true, message: 'Designation updated' });
     } catch (error) {

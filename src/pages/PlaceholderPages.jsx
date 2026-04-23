@@ -170,12 +170,32 @@ export const UsersRoles = () => <div className="p-8"><h1 className="text-2xl fon
 export const WorkShifts = () => {
   const [shifts, setShifts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [formData, setFormData] = useState({ name: '', start_time: '', end_time: '', late_grace_period_mins: 15, is_default: false });
 
-  useEffect(() => {
+  const loadData = () => {
+    setLoading(true);
     fetch('/api/shifts', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json())
       .then(d => { setShifts(d.data || []); setLoading(false); });
-  }, []);
+  };
+
+  useEffect(() => { loadData(); }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const method = editing ? 'PUT' : 'POST';
+    const url = editing ? `/api/shifts/${editing.id}` : '/api/shifts';
+    
+    await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` },
+      body: JSON.stringify(formData)
+    });
+    setModalOpen(false);
+    loadData();
+  };
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -184,11 +204,11 @@ export const WorkShifts = () => {
           <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 'bold' }}>Work Shifts</h1>
           <p style={{ color: 'var(--color-text-muted)', margin: '0.25rem 0 0 0' }}>Configure operating hours and shift templates</p>
         </div>
-        <button style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 8px 25px rgba(99,102,241,0.3)', fontFamily: 'inherit' }}>Add Shift</button>
+        <button onClick={() => { setEditing(null); setFormData({ name: '', start_time: '', end_time: '', late_grace_period_mins: 15, is_default: false }); setModalOpen(true); }} style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 8px 25px rgba(99,102,241,0.3)', fontFamily: 'inherit' }}>Add Shift</button>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
         {loading ? <p>Loading shifts...</p> : shifts.map(shift => (
-          <div key={shift.id} style={{ background: 'white', border: '1px solid var(--color-border)', borderRadius: '8px', padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <div key={shift.id} style={{ background: 'white', border: '1px solid var(--color-border)', borderRadius: '8px', padding: '1.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', cursor: 'pointer' }} onClick={() => { setEditing(shift); setFormData({ name: shift.name, start_time: shift.start_time, end_time: shift.end_time, late_grace_period_mins: shift.late_grace_period_mins, is_default: !!shift.is_default }); setModalOpen(true); }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ margin: 0, fontSize: '1.125rem', fontWeight: '600' }}>{shift.name}</h3>
               {shift.is_default ? <span style={{ background: '#d1fae5', color: '#065f46', padding: '0.125rem 0.5rem', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 'bold' }}>Default</span> : null}
@@ -198,12 +218,46 @@ export const WorkShifts = () => {
               <span>—</span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>🌙 {shift.end_time}</span>
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button style={{ flex: 1, padding: '0.5rem', border: '1px solid var(--color-border)', background: 'transparent', borderRadius: '4px', cursor: 'pointer' }}>Edit</button>
-            </div>
+            <div style={{ fontSize: '13px', color: '#64748b' }}>Grace Period: {shift.late_grace_period_mins} mins</div>
           </div>
         ))}
       </div>
+
+      {modalOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div style={{ background: 'white', border: '1px solid var(--glass-border)', borderRadius: '20px', boxShadow: 'var(--glass-shadow)', padding: '32px', width: '100%', maxWidth: '500px' }}>
+            <h2 style={{ margin: '0 0 20px 0', fontSize: '1.25rem' }}>{editing ? 'Edit Shift' : 'Add Shift'}</h2>
+            <form onSubmit={handleSubmit}>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>Shift Name</label>
+                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #e2e8f0', outline: 'none' }} />
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>Start Time</label>
+                  <input required type="time" value={formData.start_time} onChange={e => setFormData({...formData, start_time: e.target.value})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #e2e8f0', outline: 'none' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>End Time</label>
+                  <input required type="time" value={formData.end_time} onChange={e => setFormData({...formData, end_time: e.target.value})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #e2e8f0', outline: 'none' }} />
+                </div>
+              </div>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px' }}>Late Grace Period (Minutes)</label>
+                <input required type="number" min="0" value={formData.late_grace_period_mins} onChange={e => setFormData({...formData, late_grace_period_mins: parseInt(e.target.value)})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #e2e8f0', outline: 'none' }} />
+              </div>
+              <div style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <input type="checkbox" id="is_default" checked={formData.is_default} onChange={e => setFormData({...formData, is_default: e.target.checked})} />
+                <label htmlFor="is_default" style={{ fontSize: '13px', fontWeight: '600' }}>Set as Default Shift</label>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
+                <button type="button" onClick={() => setModalOpen(false)} style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#f1f5f9', color: '#64748b', cursor: 'pointer', fontWeight: '600' }}>Cancel</button>
+                <button type="submit" style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', fontWeight: '600', cursor: 'pointer' }}>{editing ? 'Save Changes' : 'Create'}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

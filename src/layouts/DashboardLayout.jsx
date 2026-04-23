@@ -77,9 +77,7 @@ const DashboardLayout = () => {
     <div className="app-container">
       <aside className="sidebar">
         <div className="sidebar-header">
-          <div style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, #6366f1, #4f46e5)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)' }}>
-            <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px' }}>M</span>
-          </div>
+          <img src="/maskpro_logo.png" alt="MaskPro" style={{ width: '36px', height: '36px', borderRadius: '10px', objectFit: 'contain' }} />
           <span>MaskPro <span style={{ color: '#818cf8' }}>HRIS</span></span>
         </div>
         

@@ -47,13 +47,13 @@ const Login = () => {
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
-            width: '72px', height: '72px', margin: '0 auto 20px',
+            width: '80px', height: '80px', margin: '0 auto 20px',
             background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(20px)',
-            borderRadius: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            borderRadius: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center',
             border: '1px solid rgba(255,255,255,0.2)',
             boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
           }}>
-            <span style={{ fontSize: '28px', fontWeight: '800', color: 'white' }}>M</span>
+            <img src="/maskpro_logo.png" alt="MaskPro" style={{ width: '52px', height: '52px', objectFit: 'contain' }} />
           </div>
           <h1 style={{ fontSize: '2rem', fontWeight: '800', color: 'white', marginBottom: '8px', letterSpacing: '-0.03em' }}>
             MaskPro HRIS

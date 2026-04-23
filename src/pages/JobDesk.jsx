@@ -1,138 +1,174 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Search, Filter, MoreHorizontal, CheckCircle, XCircle } from 'lucide-react';
+import { Clock, Calendar, FileText, Download, Briefcase, Mail, Phone, MapPin, Award } from 'lucide-react';
 
 const JobDesk = () => {
   const { user } = useContext(AuthContext);
-  const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
-
-  const fetchEmployees = async () => {
-    try {
-      const token = localStorage.getItem('hris_token');
-      const response = await fetch('/api/employees', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const result = await response.json();
-      if (result.success) {
-        setEmployees(result.data);
-      }
-    } catch (error) {
-      console.error('Failed to fetch employees', error);
-    } finally {
-      setLoading(false);
-    }
+  const cardStyle = {
+    background: 'var(--glass-bg)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid var(--glass-border)',
+    borderRadius: '20px',
+    boxShadow: 'var(--glass-shadow)',
+    padding: '24px',
+    overflow: 'hidden'
   };
 
-  const filteredEmployees = employees.filter(emp => 
-    emp.full_name?.toLowerCase().includes(search.toLowerCase()) ||
-    emp.username?.toLowerCase().includes(search.toLowerCase()) ||
-    emp.unify_job_title?.toLowerCase().includes(search.toLowerCase())
-  );
+  const statCard = {
+    ...cardStyle,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px'
+  };
+
+  const iconWrapper = (color, bg) => ({
+    width: '48px',
+    height: '48px',
+    borderRadius: '14px',
+    background: bg,
+    color: color,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  });
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 'bold' }}>All Employees</h1>
-          <p style={{ color: 'var(--color-text-muted)', margin: '0.25rem 0 0 0' }}>Manage staff directory and roles</p>
+    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+      {/* Header Profile Section */}
+      <div style={{ ...cardStyle, marginBottom: '2rem', display: 'flex', gap: '24px', alignItems: 'center', background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(255, 255, 255, 0.4) 100%)' }}>
+        <div style={{ width: '100px', height: '100px', borderRadius: '24px', background: 'linear-gradient(135deg, #6366f1, #4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem', fontWeight: '800', color: 'white', boxShadow: '0 10px 25px rgba(99, 102, 241, 0.3)' }}>
+          {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
         </div>
-        <button style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 8px 25px rgba(99,102,241,0.3)', fontFamily: 'inherit' }}>Add Employee</button>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: '800', color: '#1e293b' }}>{user?.full_name || 'User'}</h1>
+            <span style={{ padding: '4px 12px', background: '#dcfce7', color: '#166534', borderRadius: '99px', fontSize: '12px', fontWeight: '700' }}>ACTIVE</span>
+          </div>
+          <p style={{ margin: '0 0 16px 0', fontSize: '1.1rem', color: '#64748b', fontWeight: '500' }}>
+            {user?.unify_job_title || user?.access_level || 'Employee'}
+          </p>
+          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '14px' }}>
+              <Briefcase size={16} color="#6366f1" /> {user?.department_name || 'Department TBD'}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '14px' }}>
+              <MapPin size={16} color="#f43f5e" /> {user?.branch_id === 2 ? 'Davao Ecoland' : user?.branch_id === 3 ? 'Gensan' : 'Davao Obrero'}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '14px' }}>
+              <Mail size={16} color="#10b981" /> {user?.username}@maskpro.ph
+            </div>
+          </div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: '13px', color: '#94a3b8', fontWeight: '600', marginBottom: '4px', textTransform: 'uppercase' }}>Employee ID</div>
+          <div style={{ fontSize: '24px', fontWeight: '800', color: '#334155', fontFamily: 'monospace' }}>MP-{String(user?.id).padStart(4, '0')}</div>
+        </div>
       </div>
 
-      <div style={{ background: 'white', borderRadius: '12px', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
-        {/* Table Toolbar */}
-        <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--color-border)', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <div style={{ position: 'relative', flex: 1, maxWidth: '400px' }}>
-            <Search size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
-            <input 
-              type="text" 
-              placeholder="Search employees by name, role..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.5rem', border: '1px solid var(--color-border)', borderRadius: '6px', outline: 'none' }}
-            />
+      {/* Stats Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+        <div style={statCard}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <p style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>Available Vacation Leave</p>
+              <h2 style={{ margin: 0, fontSize: '2rem', fontWeight: '800', color: '#1e293b' }}>12 <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: '500' }}>Days</span></h2>
+            </div>
+            <div style={iconWrapper('#6366f1', '#e0e7ff')}><Calendar size={24} /></div>
           </div>
-          <button style={{ padding: '0.6rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'white', border: '1px solid var(--color-border)', borderRadius: '6px', cursor: 'pointer' }}>
-            <Filter size={18} /> Filters
-          </button>
+          <div style={{ height: '6px', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden', marginTop: 'auto' }}>
+            <div style={{ width: '80%', height: '100%', background: '#6366f1', borderRadius: '3px' }} />
+          </div>
         </div>
 
-        {/* Table */}
-        <div style={{ overflowX: 'auto' }}>
+        <div style={statCard}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <p style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>Available Sick Leave</p>
+              <h2 style={{ margin: 0, fontSize: '2rem', fontWeight: '800', color: '#1e293b' }}>5 <span style={{ fontSize: '1rem', color: '#94a3b8', fontWeight: '500' }}>Days</span></h2>
+            </div>
+            <div style={iconWrapper('#f59e0b', '#fef3c7')}><FileText size={24} /></div>
+          </div>
+          <div style={{ height: '6px', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden', marginTop: 'auto' }}>
+            <div style={{ width: '50%', height: '100%', background: '#f59e0b', borderRadius: '3px' }} />
+          </div>
+        </div>
+
+        <div style={statCard}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <p style={{ margin: '0 0 8px 0', fontSize: '13px', fontWeight: '600', color: '#64748b', textTransform: 'uppercase' }}>Next Payrun</p>
+              <h2 style={{ margin: 0, fontSize: '1.75rem', fontWeight: '800', color: '#1e293b' }}>April 30</h2>
+            </div>
+            <div style={iconWrapper('#10b981', '#d1fae5')}><Award size={24} /></div>
+          </div>
+          <p style={{ margin: 'auto 0 0 0', fontSize: '14px', color: '#64748b' }}>Period: Apr 16 - Apr 30</p>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem' }}>
+        {/* Recent Attendance */}
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '800', color: '#1e293b' }}>Recent Attendance</h3>
+            <button style={{ background: 'transparent', border: '1px solid #e2e8f0', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: '600', color: '#6366f1', cursor: 'pointer' }}>View All</button>
+          </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
-              <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--color-border)' }}>
-                <th style={{ padding: '1rem 1.5rem', fontWeight: '600', color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Employee</th>
-                <th style={{ padding: '1rem 1.5rem', fontWeight: '600', color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Role (Unify)</th>
-                <th style={{ padding: '1rem 1.5rem', fontWeight: '600', color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Status</th>
-                {['ryan', 'karen'].includes(user?.username) && (
-                  <th style={{ padding: '1rem 1.5rem', fontWeight: '600', color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Base Rate</th>
-                )}
-                <th style={{ padding: '1rem 1.5rem', fontWeight: '600', color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>Actions</th>
+              <tr>
+                <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#94a3b8', textTransform: 'uppercase', borderBottom: '1px solid #f1f5f9' }}>Date</th>
+                <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#94a3b8', textTransform: 'uppercase', borderBottom: '1px solid #f1f5f9' }}>Time In</th>
+                <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#94a3b8', textTransform: 'uppercase', borderBottom: '1px solid #f1f5f9' }}>Time Out</th>
+                <th style={{ padding: '12px 16px', fontSize: '12px', fontWeight: '600', color: '#94a3b8', textTransform: 'uppercase', borderBottom: '1px solid #f1f5f9' }}>Status</th>
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="5" style={{ padding: '3rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>Loading directory...</td>
-                </tr>
-              ) : filteredEmployees.length === 0 ? (
-                <tr>
-                  <td colSpan="5" style={{ padding: '3rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>No employees found.</td>
-                </tr>
-              ) : (
-                filteredEmployees.map(emp => (
-                  <tr key={emp.user_id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                    <td style={{ padding: '1rem 1.5rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-background)', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                          {emp.full_name ? emp.full_name.charAt(0).toUpperCase() : 'U'}
-                        </div>
-                        <div>
-                          <div style={{ fontWeight: '600' }}>{emp.full_name || emp.username}</div>
-                          <div style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>@{emp.username}</div>
-                        </div>
-                      </div>
+              {[1, 2, 3, 4, 5].map((item, i) => {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                return (
+                  <tr key={i}>
+                    <td style={{ padding: '16px', borderBottom: '1px solid #f8fafc', fontWeight: '500', color: '#334155' }}>
+                      {date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', color: 'var(--color-text-muted)' }}>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', padding: '0.25rem 0.75rem', background: '#f1f5f9', borderRadius: '999px', fontSize: '0.875rem' }}>
-                        {emp.unify_job_title || emp.access_level}
-                      </div>
+                    <td style={{ padding: '16px', borderBottom: '1px solid #f8fafc', color: '#64748b' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14} color="#10b981" /> 08:55 AM</div>
                     </td>
-                    <td style={{ padding: '1rem 1.5rem' }}>
-                      {emp.is_active ? (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', color: '#10b981', fontSize: '0.875rem' }}>
-                          <CheckCircle size={16} /> Active
-                        </div>
-                      ) : (
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', color: '#ef4444', fontSize: '0.875rem' }}>
-                          <XCircle size={16} /> Inactive
-                        </div>
-                      )}
+                    <td style={{ padding: '16px', borderBottom: '1px solid #f8fafc', color: '#64748b' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Clock size={14} color="#f43f5e" /> 06:05 PM</div>
                     </td>
-                    {['ryan', 'karen'].includes(user?.username) && (
-                      <td style={{ padding: '1rem 1.5rem', fontWeight: '500' }}>
-                        ₱{emp.base_hourly_rate || '0.00'} / hr
-                      </td>
-                    )}
-                    <td style={{ padding: '1rem 1.5rem' }}>
-                      <button style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)' }}>
-                        <MoreHorizontal size={20} />
-                      </button>
+                    <td style={{ padding: '16px', borderBottom: '1px solid #f8fafc' }}>
+                      <span style={{ padding: '4px 10px', background: '#f1f5f9', color: '#64748b', borderRadius: '6px', fontSize: '12px', fontWeight: '600' }}>Present</span>
                     </td>
                   </tr>
-                ))
-              )}
+                );
+              })}
             </tbody>
           </table>
+        </div>
+
+        {/* Recent Payslips */}
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: '800', color: '#1e293b' }}>Recent Payslips</h3>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {[
+              { period: 'Apr 01 - Apr 15, 2026', amount: '₱12,500.00' },
+              { period: 'Mar 16 - Mar 31, 2026', amount: '₱12,500.00' },
+              { period: 'Mar 01 - Mar 15, 2026', amount: '₱12,500.00' },
+            ].map((slip, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', border: '1px solid #e2e8f0', borderRadius: '14px', background: '#f8fafc' }}>
+                <div>
+                  <div style={{ fontSize: '13px', color: '#64748b', marginBottom: '4px', fontWeight: '500' }}>{slip.period}</div>
+                  <div style={{ fontSize: '15px', fontWeight: '700', color: '#1e293b' }}>{slip.amount}</div>
+                </div>
+                <button style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'white', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: '#6366f1', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                  <Download size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

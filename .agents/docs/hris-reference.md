@@ -132,3 +132,9 @@ All server configurations, project files, application logic, and database connec
 ### 🎨 UI & Styling Standards
 - **Modern Date Inputs**: DO NOT use standard default HTML5 date inputs alone. All date ranges (e.g., Leave Requests, Attendance range) MUST use a modernized "flight/hotel booking" continuous style (two inputs connected visually as a single block) with clear "Check-Out"/"Return" or "Start"/"End" micro-labels floating above the inputs.
 - **Glassmorphism**: Default to glassmorphism UI cards and gradient primary buttons for premium aesthetics.
+
+## Design Standards Update (Date Range Picker)
+- Based on user feedback, the standard for all date range pickers across the HRIS system should mimic the layout found in `bookings.php` of the Unify app.
+- **Do NOT use custom dual native `<input type="date">` elements.**
+- **Use `react-flatpickr`** with `mode: 'range'`, `dateFormat: 'M j, Y'`, and a single input layout with a `CalendarDays` icon inside the input wrapper.
+- This creates the unified, professional popover calendar experience expected by the team.

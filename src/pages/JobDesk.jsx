@@ -46,11 +46,11 @@ const JobDesk = () => {
             <span style={{ padding: '4px 12px', background: '#dcfce7', color: '#166534', borderRadius: '99px', fontSize: '12px', fontWeight: '700' }}>ACTIVE</span>
           </div>
           <p style={{ margin: '0 0 16px 0', fontSize: '1.1rem', color: '#64748b', fontWeight: '500' }}>
-            {user?.unify_job_title || user?.access_level || 'Employee'}
+            {user?.designation_name || user?.unify_job_title || user?.access_level || 'Employee'}
           </p>
           <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '14px' }}>
-              <Briefcase size={16} color="#6366f1" /> {user?.department_name || 'Department TBD'}
+              <Briefcase size={16} color="#6366f1" /> {user?.department_name || 'Unassigned Department'}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '14px' }}>
               <MapPin size={16} color="#f43f5e" /> {user?.branch_id === 5 ? 'Davao Ecoland' : user?.branch_id === 2 ? 'Gensan' : 'Davao Obrero'}

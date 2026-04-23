@@ -1,5 +1,9 @@
-## [v1.3.1] — 2026-04-23
+## [v1.3.2] — 2026-04-23
 ### Added / Changed / Fixed
+- **UI/UX:** Replaced the custom native dual-input date picker in Leave Request with `react-flatpickr` to perfectly match the unified, premium "flight schedule" styling used in the legacy `bookings.php` module.
+- **Docs:** Added explicit instruction in `.agents/docs/hris-reference.md` to use Flatpickr instead of native inputs for all future date range selectors.
+
+## [v1.3.1] — 2026-04-23
 - **UI/UX:** Redesigned the Org Structure page into an interactive, animated custom tree structure.
 - **UI/UX:** Fixed the squished HRIS logo in the Dashboard layout.
 - **Logic:** Filtered out the Gensan branch (`branch_id = 2`) globally from the API so franchise staff do not appear in HRIS.

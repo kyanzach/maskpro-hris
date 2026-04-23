@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, CalendarDays, CheckCircle, XCircle, Clock } from 'lucide-react';
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 const btn = { background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 8px 25px rgba(99,102,241,0.3)', fontFamily: 'inherit' };
 const card = { background: 'var(--glass-bg)', backdropFilter: 'blur(20px)', border: '1px solid var(--glass-border)', borderRadius: '20px', boxShadow: 'var(--glass-shadow)', overflow: 'hidden' };
@@ -51,21 +53,29 @@ export const LeaveRequest = () => (
         </select>
       </div>
       
-      {/* Modern Flight-Style Date Range Picker */}
+      {/* Modern Flatpickr Range Picker (matches unify bookings style) */}
       <div style={{ marginBottom: '24px' }}>
         <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Date Range</label>
-        <div style={{ display: 'flex', alignItems: 'center', background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '14px', overflow: 'hidden', transition: 'border-color 0.2s', padding: '4px' }}>
-          <div style={{ flex: 1, position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '12px', left: '16px', color: '#94a3b8' }}><CalendarDays size={18} /></div>
-            <input type="date" className="modern-date" style={{ width: '100%', padding: '14px 16px 14px 44px', border: 'none', background: 'transparent', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', fontWeight: '500', outline: 'none' }} />
-            <div style={{ position: 'absolute', top: '4px', right: '0', bottom: '4px', width: '1px', background: '#e2e8f0' }} />
-            <span style={{ position: 'absolute', top: '-10px', left: '44px', fontSize: '10px', fontWeight: '700', color: '#6366f1', textTransform: 'uppercase', background: '#f8fafc', padding: '0 4px', borderRadius: '4px' }}>Check-Out</span>
+        <div style={{ position: 'relative' }}>
+          <div style={{ position: 'absolute', top: '14px', left: '16px', color: '#64748b', zIndex: 2, pointerEvents: 'none' }}>
+            <CalendarDays size={18} />
           </div>
-          <div style={{ flex: 1, position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '12px', left: '16px', color: '#94a3b8' }}><CalendarDays size={18} /></div>
-            <input type="date" className="modern-date" style={{ width: '100%', padding: '14px 16px 14px 44px', border: 'none', background: 'transparent', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', fontWeight: '500', outline: 'none' }} />
-            <span style={{ position: 'absolute', top: '-10px', left: '44px', fontSize: '10px', fontWeight: '700', color: '#10b981', textTransform: 'uppercase', background: '#f8fafc', padding: '0 4px', borderRadius: '4px' }}>Return</span>
-          </div>
+          <Flatpickr
+            options={{
+              mode: 'range',
+              dateFormat: 'M j, Y',
+              minDate: 'today',
+            }}
+            placeholder="Select a date range..."
+            style={{ 
+              width: '100%', padding: '14px 16px 14px 44px', border: '2px solid #e2e8f0', 
+              borderRadius: '12px', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', 
+              fontWeight: '500', outline: 'none', transition: 'border-color 0.2s', background: '#f8fafc',
+              cursor: 'pointer'
+            }}
+            onFocus={(e) => e.target.style.borderColor = '#6366f1'}
+            onBlur={(e) => e.target.style.borderColor = '#e2e8f0'}
+          />
         </div>
       </div>
 

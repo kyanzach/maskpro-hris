@@ -27,8 +27,11 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ success: false, message: 'Your account has been deactivated. Please contact your administrator.' });
         }
 
+        // Convert PHP's $2y$ hash prefix to $2a$ for Node.js bcrypt compatibility
+        const nodeCompatibleHash = user.password.replace(/^\$2y\$/, '$2a$');
+        
         // Verify password
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, nodeCompatibleHash);
 
         if (!isMatch) {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });

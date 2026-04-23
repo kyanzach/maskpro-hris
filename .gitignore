@@ -26,3 +26,4 @@ dist-ssr
 # Server
 server/node_modules
 server/.env
+.ssh_helper.sh

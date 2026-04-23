@@ -2,6 +2,32 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 const { authorize } = require('../middleware/auth');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// Configure multer for profile picture uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        const dir = path.join(__dirname, '../uploads/profiles');
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        cb(null, dir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, req.user.id + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) cb(null, true);
+        else cb(new Error('Not an image! Please upload an image.'), false);
+    }
+});
 
 // @route   GET /api/employees
 // @desc    Get all employees joined with Unify users table
@@ -99,6 +125,55 @@ router.put('/:user_id', authorize(['admin', 'hr']), async (req, res) => {
     } catch (error) {
         console.error('Error updating employee:', error);
         res.status(500).json({ success: false, message: 'Server error updating employee' });
+    }
+});
+
+// @route   POST /api/employees/profile-picture
+// @desc    Upload or update profile picture
+// @access  Private
+router.post('/profile-picture', authorize(), upload.single('avatar'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'No image uploaded' });
+        }
+
+        const avatarUrl = `/uploads/profiles/${req.file.filename}`;
+        
+        // Update user's profile picture in the database
+        await pool.query('UPDATE users SET profile_picture = ? WHERE id = ?', [avatarUrl, req.user.id]);
+
+        res.json({ success: true, message: 'Profile picture updated successfully', avatarUrl });
+    } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        res.status(500).json({ success: false, message: error.message || 'Server error' });
+    }
+});
+
+// @route   GET /api/employees/biometric/:uid
+// @desc    Get employee basic details by biometric UID for the Kiosk
+// @access  Public (or protected by API Key)
+router.get('/biometric/:uid', async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const query = `
+            SELECT 
+                u.full_name, 
+                u.job_title, 
+                u.profile_picture 
+            FROM hr_employees h
+            INNER JOIN users u ON h.user_id = u.id
+            WHERE h.biometric_uid = ?
+        `;
+        const [emp] = await pool.query(query, [uid]);
+
+        if (emp.length === 0) {
+            return res.status(404).json({ success: false, message: 'Employee not found' });
+        }
+
+        res.json({ success: true, data: emp[0] });
+    } catch (error) {
+        console.error('Error fetching employee by biometric:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 

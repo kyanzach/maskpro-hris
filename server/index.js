@@ -7,9 +7,12 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./config/db');
 
+const path = require('path');
+
 const app = express();
 app.use(cors());
 app.use(express.json()); // Parse JSON bodies
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 3001;
 

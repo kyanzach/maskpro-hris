@@ -1,3 +1,11 @@
+## [v1.5.0] — 2026-04-24
+### Added / Changed / Fixed
+- **Feature (Mini-PC Kiosk):** Completely refactored the Biometric Bridge to run a local Express & WebSocket server. It now serves a beautiful, full-screen glass-morphism Kiosk UI that reacts in real-time to fingerprint punches, displaying the user's name, profile picture, and a randomized motivational Bible verse.
+- **Feature (HRIS Profile):** Added a new `Profile Settings` page in the HRIS where employees can upload their profile pictures. 
+- **API:** Added `POST /api/employees/profile-picture` using `multer` for secure image uploads.
+- **API:** Added `GET /api/employees/biometric/:uid` for the Kiosk App to instantly fetch employee details upon a punch.
+- **Handoff:** Created `setup_windows.bat` in the bridge folder to automatically install PM2, register the background service, and create a Windows Startup shortcut for the Kiosk mode Chrome browser.
+
 ## [v1.4.0] — 2026-04-24
 ### Added / Changed / Fixed
 - **API:** Created the `POST /api/attendance/sync` receiver route to catch raw punches from the biometric bridge on the Mini-PC.

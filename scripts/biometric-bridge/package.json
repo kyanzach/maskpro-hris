@@ -10,6 +10,9 @@
   "dependencies": {
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",
-    "zklib": "^1.0.18"
+    "node-zklib": "*",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "socket.io": "^4.7.5"
   }
 }

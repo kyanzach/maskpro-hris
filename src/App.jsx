@@ -8,6 +8,7 @@ import { AllEmployees, Designations, EmploymentStatus, Departments, Holiday, Ann
 import { LeaveStatus, LeaveRequest, LeaveCalendar, LeaveSummary } from './pages/LeavePages';
 import { AttendanceDailyLog, WorkShifts, RateMatrix, ImagePayslips } from './pages/PlaceholderPages';
 import { AttendanceDetails, AttendanceRequest, Payrun, Payslip, Beneficiary, AccountingBatch, UsersRoles, OrgStructure, BiometricManager, UnifySync, AppSettings, LeaveSettings, AttendanceSettings, PayrollSettings, Import } from './pages/AdminPages';
+import { ProfileSettings } from './pages/ProfileSettings';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -20,6 +21,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<DashboardLayout />}>
               <Route index element={<Dashboard />} />
+              <Route path="profile" element={<ProfileSettings />} />
               <Route path="job-desk" element={<JobDesk />} />
               
               {/* Employee */}

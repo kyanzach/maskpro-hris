@@ -10,13 +10,26 @@ set -euo pipefail
 # ── Config ──
 SERVER_IP="167.71.217.49"
 SERVER_USER="root"
-SERVER_PASS="${DEPLOY_SSH_PASS:-777Godisgood}"
 SERVER_PATH="/var/www/hris.maskpro.ph"
 PM2_PROCESS="hris-api"
 DOMAIN="hris.maskpro.ph"
 SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=10"
 
-SSH_CMD="SSHPASS=$SERVER_PASS sshpass -e ssh $SSH_OPTS ${SERVER_USER}@${SERVER_IP}"
+# Source credentials from .ssh_helper.sh (gitignored — never committed)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$SCRIPT_DIR/.ssh_helper.sh" ]; then
+  source "$SCRIPT_DIR/.ssh_helper.sh" __source_only 2>/dev/null || true
+  # .ssh_helper.sh exports SSHPASS — we just need it in env
+  SERVER_PASS="$SSHPASS"
+else
+  SERVER_PASS="${DEPLOY_SSH_PASS:-}"
+  if [ -z "$SERVER_PASS" ]; then
+    echo -e "\033[0;31m[✗]\033[0m Missing .ssh_helper.sh and no DEPLOY_SSH_PASS env var set."
+    echo "   Create .ssh_helper.sh with: export SSHPASS=\"your-password\""
+    exit 1
+  fi
+  export SSHPASS="$SERVER_PASS"
+fi
 
 # ── Colors ──
 RED='\033[0;31m'

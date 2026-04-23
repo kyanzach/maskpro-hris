@@ -10,6 +10,17 @@ const DashboardLayout = () => {
   const { user, logout, revertImpersonation } = useContext(AuthContext);
   const navigate = useNavigate();
   const [expandedMenus, setExpandedMenus] = React.useState({});
+  const [avatarUrl, setAvatarUrl] = React.useState(user?.profile_picture || null);
+
+  React.useEffect(() => {
+    setAvatarUrl(user?.profile_picture);
+    const handleAvatarUpdate = () => {
+      // Small hack to re-fetch or use context to update visually
+      // since the context might not auto-refresh without a reload
+    };
+    window.addEventListener('avatarUpdate', handleAvatarUpdate);
+    return () => window.removeEventListener('avatarUpdate', handleAvatarUpdate);
+  }, [user]);
 
   const handleLogout = () => { logout(); navigate('/login'); };
   const toggleMenu = (name) => setExpandedMenus(prev => ({ ...prev, [name]: !prev[name] }));
@@ -142,8 +153,8 @@ const DashboardLayout = () => {
         
         <div style={{ padding: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '12px', background: 'rgba(255,255,255,0.04)' }}>
-            <div className="avatar avatar-md" style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)' }}>
-              {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
+            <div className="avatar avatar-md" style={{ background: avatarUrl ? 'transparent' : 'linear-gradient(135deg, #6366f1, #4f46e5)', overflow: 'hidden' }}>
+              {avatarUrl ? <img src={avatarUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U')}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.full_name || 'User'}</div>
@@ -170,13 +181,18 @@ const DashboardLayout = () => {
               <Bell size={18} color="#6366f1" />
               <span style={{ position: 'absolute', top: '4px', right: '4px', background: 'linear-gradient(135deg, #f43f5e, #e11d48)', color: 'white', fontSize: '9px', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontWeight: '700' }}>3</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div 
+              style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', padding: '4px 8px', borderRadius: '8px', transition: 'background 0.2s' }}
+              onClick={() => navigate('/profile')}
+              onMouseOver={e => e.currentTarget.style.background = 'rgba(99,102,241,0.05)'}
+              onMouseOut={e => e.currentTarget.style.background = 'transparent'}
+            >
               <div style={{ textAlign: 'right' }}>
                 <div style={{ fontWeight: '600', fontSize: '13px', color: '#1e293b' }}>{user?.full_name || 'User'}</div>
                 <div style={{ fontSize: '11px', color: '#94a3b8' }}>{user?.access_level || 'Staff'}</div>
               </div>
-              <div className="avatar avatar-md" style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)' }}>
-                {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
+              <div className="avatar avatar-md" style={{ background: avatarUrl ? 'transparent' : 'linear-gradient(135deg, #6366f1, #4f46e5)', overflow: 'hidden' }}>
+                {avatarUrl ? <img src={avatarUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U')}
               </div>
             </div>
           </div>

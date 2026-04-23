@@ -43,43 +43,30 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary shadow-sm">
-            <Lock className="h-8 w-8 text-white" />
-          </div>
+    <div className="login-container">
+      <div className="login-header">
+        <div className="login-logo">
+          <Lock size={32} color="white" />
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-tight text-gray-900">
-          MaskPro HRIS
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Sign in using your Unify Suite credentials
-        </p>
+        <h2 className="login-title">MaskPro HRIS</h2>
+        <p className="login-subtitle">Sign in using your Unify Suite credentials</p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-sm sm:rounded-xl sm:px-10 border border-gray-100">
-          
+      <div className="login-card-wrapper">
+        <div className="login-card">
           {error && (
-            <div className="mb-4 flex items-center rounded-md bg-red-50 p-4">
-              <div className="flex-shrink-0">
-                <AlertCircle className="h-5 w-5 text-red-400" aria-hidden="true" />
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">{error}</h3>
-              </div>
+            <div className="error-banner">
+              <AlertCircle className="error-icon" size={20} />
+              <h3 className="error-text">{error}</h3>
             </div>
           )}
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                Username
-              </label>
-              <div className="relative mt-1 rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <User className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="username" className="form-label">Username</label>
+              <div className="input-wrapper">
+                <div className="input-icon">
+                  <User size={20} color="#9ca3af" />
                 </div>
                 <input
                   id="username"
@@ -89,19 +76,17 @@ const Login = () => {
                   required
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full rounded-md border border-gray-300 py-2.5 pl-10 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
+                  className="form-input"
                   placeholder="Enter your Unify username"
                 />
               </div>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div className="relative mt-1 rounded-md shadow-sm">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">Password</label>
+              <div className="input-wrapper">
+                <div className="input-icon">
+                  <Lock size={20} color="#9ca3af" />
                 </div>
                 <input
                   id="password"
@@ -111,48 +96,40 @@ const Login = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-md border border-gray-300 py-2.5 pl-10 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
+                  className="form-input"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            <div className="login-options">
+              <div className="checkbox-wrapper">
                 <input
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  className="form-checkbox"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                  Remember me
-                </label>
+                <label htmlFor="remember-me" className="checkbox-label">Remember me</label>
               </div>
-
-              <div className="text-sm">
-                <a href="#" className="font-medium text-primary hover:text-primary-dark">
-                  Forgot password?
-                </a>
-              </div>
+              <a href="#" className="forgot-password">Forgot password?</a>
             </div>
 
-            <div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex w-full justify-center rounded-md border border-transparent bg-primary py-2.5 px-4 text-sm font-medium text-white shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Signing in...
-                  </>
-                ) : (
-                  'Sign in'
-                )}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn btn-primary btn-block"
+              style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" style={{ marginRight: '0.5rem' }} />
+                  Signing in...
+                </>
+              ) : (
+                'Sign in'
+              )}
+            </button>
           </form>
         </div>
       </div>

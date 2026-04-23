@@ -16,9 +16,13 @@ const PORT = process.env.PORT || 3001;
 // Routes
 const authRoutes = require('./routes/auth');
 const employeeRoutes = require('./routes/employees');
+const shiftRoutes = require('./routes/shifts');
+const attendanceRoutes = require('./routes/attendance');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/api/shifts', shiftRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
 // Basic Health Check Route
 app.get('/api/health', async (req, res) => {

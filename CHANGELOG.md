@@ -1,5 +1,8 @@
-## [v1.3.2] — 2026-04-23
+## [v1.3.3] — 2026-04-23
 ### Added / Changed / Fixed
+- **Security:** Implemented comprehensive Role-Based Access Control (RBAC) in the frontend navigation to hide sensitive settings, admin panels, and payroll configurations from standard employees based on their Unify `access_level`.
+
+## [v1.3.2] — 2026-04-23
 - **UI/UX:** Replaced the custom native dual-input date picker in Leave Request with `react-flatpickr` to perfectly match the unified, premium "flight schedule" styling used in the legacy `bookings.php` module.
 - **Docs:** Added explicit instruction in `.agents/docs/hris-reference.md` to use Flatpickr instead of native inputs for all future date range selectors.
 

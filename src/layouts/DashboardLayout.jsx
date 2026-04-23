@@ -20,19 +20,19 @@ const DashboardLayout = () => {
     { name: 'Employee', icon: <Users size={20} />,
       subItems: [
         { name: 'All Employees', path: '/employees' },
-        { name: 'Designation', path: '/designations' },
-        { name: 'Employment Status', path: '/employment-status' }
+        { name: 'Designation', path: '/designations', roles: ['admin', 'manager'] },
+        { name: 'Employment Status', path: '/employment-status', roles: ['admin', 'manager'] }
       ]
     },
     { name: 'Leave', icon: <CalendarDays size={20} />,
       subItems: [
-        { name: 'Leave Status', path: '/leaves/status' },
+        { name: 'Leave Status', path: '/leaves/status', roles: ['admin', 'manager'] },
         { name: 'Leave Request', path: '/leaves/request' },
         { name: 'Calendar', path: '/leaves/calendar' },
-        { name: 'Summary', path: '/leaves/summary' }
+        { name: 'Summary', path: '/leaves/summary', roles: ['admin', 'manager'] }
       ]
     },
-    { name: 'Attendance', icon: <Clock size={20} />,
+    { name: 'Attendance', icon: <Clock size={20} />, roles: ['admin', 'manager'],
       subItems: [
         { name: 'Daily Log', path: '/attendance/daily-log' },
         { name: 'Attendance Details', path: '/attendance/details' },
@@ -41,14 +41,14 @@ const DashboardLayout = () => {
     },
     { name: 'Payroll', icon: <Banknote size={20} />,
       subItems: [
-        { name: 'Payrun', path: '/payroll/payrun' },
+        { name: 'Payrun', path: '/payroll/payrun', roles: ['admin', 'manager', 'accounting'] },
         { name: 'Payslip', path: '/payroll/payslip' },
-        { name: 'Beneficiary', path: '/payroll/beneficiary' },
-        { name: 'Rate Matrix', path: '/payroll/rate-matrix', enhanced: true },
-        { name: 'Accounting Batch', path: '/payroll/accounting-batch', enhanced: true }
+        { name: 'Beneficiary', path: '/payroll/beneficiary', roles: ['admin', 'manager', 'accounting'] },
+        { name: 'Rate Matrix', path: '/payroll/rate-matrix', enhanced: true, roles: ['admin', 'manager'] },
+        { name: 'Accounting Batch', path: '/payroll/accounting-batch', enhanced: true, roles: ['admin', 'manager', 'accounting'] }
       ]
     },
-    { name: 'Administration', icon: <ShieldAlert size={20} />,
+    { name: 'Administration', icon: <ShieldAlert size={20} />, roles: ['admin', 'manager'],
       subItems: [
         { name: 'Users & Roles', path: '/admin/roles' },
         { name: 'Work Shifts', path: '/admin/shifts' },
@@ -60,8 +60,8 @@ const DashboardLayout = () => {
         { name: 'Unify Sync', path: '/admin/unify-sync', enhanced: true }
       ]
     },
-    { name: 'Assets', path: '/assets', icon: <Package size={20} /> },
-    { name: 'Settings', icon: <Settings size={20} />,
+    { name: 'Assets', path: '/assets', icon: <Package size={20} />, roles: ['admin', 'manager', 'warehouseadmin'] },
+    { name: 'Settings', icon: <Settings size={20} />, roles: ['admin'],
       subItems: [
         { name: 'App Settings', path: '/settings/app' },
         { name: 'Leave Settings', path: '/settings/leave' },
@@ -73,6 +73,27 @@ const DashboardLayout = () => {
     },
   ];
 
+  // RBAC Filtering Logic
+  const hasAccess = (item) => {
+    if (!item.roles) return true;
+    const userRole = user?.access_level?.toLowerCase() || 'user';
+    return item.roles.includes(userRole);
+  };
+
+  const filteredNavItems = navItems.map(item => {
+    if (item.subItems) {
+      return {
+        ...item,
+        subItems: item.subItems.filter(hasAccess)
+      };
+    }
+    return item;
+  }).filter(item => {
+    if (!hasAccess(item)) return false;
+    if (item.subItems && item.subItems.length === 0) return false;
+    return true;
+  });
+
   return (
     <div className="app-container">
       <aside className="sidebar">
@@ -82,7 +103,7 @@ const DashboardLayout = () => {
         </div>
         
         <nav className="sidebar-nav">
-          {navItems.map((item) => (
+          {filteredNavItems.map((item) => (
             <div key={item.name}>
               {item.subItems ? (
                 <>

@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
-const { requireAuth, requireRole } = require('../middleware/auth');
+const { authorize } = require('../middleware/auth');
 
 // @route   GET /api/employees
 // @desc    Get all employees joined with Unify users table
 // @access  Private (Admin/HR)
-router.get('/', requireAuth, async (req, res) => {
+router.get('/', authorize(), async (req, res) => {
     try {
         const query = `
             SELECT 

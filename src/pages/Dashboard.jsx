@@ -8,7 +8,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('hris_token');
     fetch('/api/dashboard/stats', { headers: { 'Authorization': `Bearer ${token}` }})
       .then(r => r.json())
       .then(d => { setStats(d.data); setLoading(false); })

@@ -14,7 +14,7 @@ const JobDesk = () => {
 
   const fetchEmployees = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('hris_token');
       const response = await fetch('/api/employees', {
         headers: {
           'Authorization': `Bearer ${token}`

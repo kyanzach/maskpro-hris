@@ -14,7 +14,7 @@ export const AllEmployees = () => {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch('/api/employees', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/employees', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => { setEmployees(d.data || []); setLoading(false); });
   }, []);
 
@@ -89,7 +89,7 @@ export const Designations = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('/api/designations', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/designations', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => { setData(d.data || []); setLoading(false); });
   }, []);
   return (
@@ -116,7 +116,7 @@ export const EmploymentStatus = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('/api/employment-statuses', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/employment-statuses', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => { setData(d.data || []); setLoading(false); });
   }, []);
   const colors = ['#6366f1', '#10b981', '#f59e0b', '#f43f5e', '#8b5cf6', '#06b6d4'];
@@ -146,7 +146,7 @@ export const Departments = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('/api/departments', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/departments', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => { setData(d.data || []); setLoading(false); });
   }, []);
   return (
@@ -180,7 +180,7 @@ export const Holiday = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('/api/holidays', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/holidays', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => { setData(d.data || []); setLoading(false); });
   }, []);
   return (
@@ -214,7 +214,7 @@ export const Announcements = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('/api/announcements', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/announcements', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => { setData(d.data || []); setLoading(false); });
   }, []);
   return (
@@ -244,7 +244,7 @@ export const Assets = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('/api/assets', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/assets', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => { setData(d.data || []); setLoading(false); });
   }, []);
   return (

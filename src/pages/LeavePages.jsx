@@ -10,7 +10,7 @@ export const LeaveStatus = () => {
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetch('/api/leaves', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/leaves', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => { setLeaves(d.data || []); setLoading(false); });
   }, []);
   return (
@@ -57,13 +57,13 @@ export const LeaveRequest = () => (
         <div style={{ display: 'flex', alignItems: 'center', background: '#f8fafc', border: '2px solid #e2e8f0', borderRadius: '14px', overflow: 'hidden', transition: 'border-color 0.2s', padding: '4px' }}>
           <div style={{ flex: 1, position: 'relative' }}>
             <div style={{ position: 'absolute', top: '12px', left: '16px', color: '#94a3b8' }}><CalendarDays size={18} /></div>
-            <input type="date" style={{ width: '100%', padding: '14px 16px 14px 44px', border: 'none', background: 'transparent', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', fontWeight: '500', outline: 'none' }} />
+            <input type="date" className="modern-date" style={{ width: '100%', padding: '14px 16px 14px 44px', border: 'none', background: 'transparent', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', fontWeight: '500', outline: 'none' }} />
             <div style={{ position: 'absolute', top: '4px', right: '0', bottom: '4px', width: '1px', background: '#e2e8f0' }} />
             <span style={{ position: 'absolute', top: '-10px', left: '44px', fontSize: '10px', fontWeight: '700', color: '#6366f1', textTransform: 'uppercase', background: '#f8fafc', padding: '0 4px', borderRadius: '4px' }}>Check-Out</span>
           </div>
           <div style={{ flex: 1, position: 'relative' }}>
             <div style={{ position: 'absolute', top: '12px', left: '16px', color: '#94a3b8' }}><CalendarDays size={18} /></div>
-            <input type="date" style={{ width: '100%', padding: '14px 16px 14px 44px', border: 'none', background: 'transparent', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', fontWeight: '500', outline: 'none' }} />
+            <input type="date" className="modern-date" style={{ width: '100%', padding: '14px 16px 14px 44px', border: 'none', background: 'transparent', fontSize: '15px', fontFamily: 'inherit', color: '#1e293b', fontWeight: '500', outline: 'none' }} />
             <span style={{ position: 'absolute', top: '-10px', left: '44px', fontSize: '10px', fontWeight: '700', color: '#10b981', textTransform: 'uppercase', background: '#f8fafc', padding: '0 4px', borderRadius: '4px' }}>Return</span>
           </div>
         </div>

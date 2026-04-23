@@ -9,7 +9,7 @@ export const LeaveStatus = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/leaves', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/leaves', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json())
       .then(d => { setLeaves(d.data || []); setLoading(false); });
   }, []);
@@ -59,7 +59,7 @@ export const AttendanceDailyLog = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/attendance/daily', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/attendance/daily', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json())
       .then(d => { setLogs(d.data || []); setLoading(false); });
   }, []);
@@ -114,7 +114,7 @@ export const RateMatrix = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/employees', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/employees', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json())
       .then(d => { setEmployees(d.data || []); setLoading(false); });
   }, []);
@@ -172,7 +172,7 @@ export const WorkShifts = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/shifts', { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }})
+    fetch('/api/shifts', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json())
       .then(d => { setShifts(d.data || []); setLoading(false); });
   }, []);

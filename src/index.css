@@ -430,6 +430,29 @@ body {
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
+/* Modern Date Range overrides */
+input[type="date"].modern-date {
+  background-color: transparent !important;
+  -webkit-appearance: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+input[type="date"].modern-date::-webkit-datetime-edit-fields-wrapper {
+  background: transparent;
+}
+
+input[type="date"].modern-date::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
 /* ============================================
    LOGIN PAGE
    ============================================ */

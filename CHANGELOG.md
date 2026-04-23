@@ -1,3 +1,8 @@
+## [v1.3.5] — 2026-04-23
+### Added / Changed / Fixed
+- **UI/UX:** Changed 'Bonus Percentage (%)' to 'Overtime Rate (₱/hr)' across the backend database and UI for correct phrasing.
+- **Fix:** Fixed an issue where the `AllEmployees` edit modal did not prefetch or recall the current HR profile due to missing IDs in the API response.
+
 ## [v1.3.4] — 2026-04-23
 ### Added / Changed / Fixed
 - **UI/UX:** Fully implemented interactive Add/Edit UI Modals for the `Departments`, `Designations`, `EmploymentStatus`, and `WorkShifts` components.

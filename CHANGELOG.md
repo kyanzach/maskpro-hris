@@ -1,3 +1,8 @@
+## [v1.3.6] — 2026-04-24
+### Added / Changed / Fixed
+- **Fix:** Fixed an issue where editing a `WorkShift` silently failed and reverted state due to a missing `PUT /api/shifts/:id` route in the backend API.
+- **Logic:** Fixed the `POST /api/shifts` backend route which previously ignored the `late_grace_period_mins` payload.
+
 ## [v1.3.5] — 2026-04-23
 ### Added / Changed / Fixed
 - **UI/UX:** Changed 'Bonus Percentage (%)' to 'Overtime Rate (₱/hr)' across the backend database and UI for correct phrasing.

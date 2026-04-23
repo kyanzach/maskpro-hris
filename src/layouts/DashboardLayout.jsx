@@ -2,53 +2,29 @@ import React, { useContext } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { 
-  LayoutDashboard, 
-  Users, 
-  CalendarDays, 
-  Clock, 
-  Banknote, 
-  Settings,
-  ShieldAlert,
-  LogOut,
-  Bell,
-  ChevronDown,
-  ChevronRight,
-  Package
+  LayoutDashboard, Users, CalendarDays, Clock, Banknote, Settings,
+  ShieldAlert, LogOut, Bell, ChevronDown, ChevronRight, Package
 } from 'lucide-react';
 
 const DashboardLayout = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   const [expandedMenus, setExpandedMenus] = React.useState({});
 
-  const toggleMenu = (name) => {
-    setExpandedMenus(prev => ({
-      ...prev,
-      [name]: !prev[name]
-    }));
-  };
+  const handleLogout = () => { logout(); navigate('/login'); };
+  const toggleMenu = (name) => setExpandedMenus(prev => ({ ...prev, [name]: !prev[name] }));
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
     { name: 'Job Desk', path: '/job-desk', icon: <Users size={20} /> },
-    { 
-      name: 'Employee', 
-      icon: <Users size={20} />,
+    { name: 'Employee', icon: <Users size={20} />,
       subItems: [
         { name: 'All Employees', path: '/employees' },
         { name: 'Designation', path: '/designations' },
         { name: 'Employment Status', path: '/employment-status' }
       ]
     },
-    { 
-      name: 'Leave', 
-      icon: <CalendarDays size={20} />,
+    { name: 'Leave', icon: <CalendarDays size={20} />,
       subItems: [
         { name: 'Leave Status', path: '/leaves/status' },
         { name: 'Leave Request', path: '/leaves/request' },
@@ -56,29 +32,23 @@ const DashboardLayout = () => {
         { name: 'Summary', path: '/leaves/summary' }
       ]
     },
-    { 
-      name: 'Attendance', 
-      icon: <Clock size={20} />,
+    { name: 'Attendance', icon: <Clock size={20} />,
       subItems: [
         { name: 'Daily Log', path: '/attendance/daily-log' },
         { name: 'Attendance Details', path: '/attendance/details' },
         { name: 'Attendance Request', path: '/attendance/request' }
       ]
     },
-    { 
-      name: 'Payroll', 
-      icon: <Banknote size={20} />,
+    { name: 'Payroll', icon: <Banknote size={20} />,
       subItems: [
         { name: 'Payrun', path: '/payroll/payrun' },
         { name: 'Payslip', path: '/payroll/payslip' },
         { name: 'Beneficiary', path: '/payroll/beneficiary' },
-        { name: 'Advanced Rate Matrix', path: '/payroll/rate-matrix', enhanced: true },
+        { name: 'Rate Matrix', path: '/payroll/rate-matrix', enhanced: true },
         { name: 'Accounting Batch', path: '/payroll/accounting-batch', enhanced: true }
       ]
     },
-    { 
-      name: 'Administration', 
-      icon: <ShieldAlert size={20} />,
+    { name: 'Administration', icon: <ShieldAlert size={20} />,
       subItems: [
         { name: 'Users & Roles', path: '/admin/roles' },
         { name: 'Work Shifts', path: '/admin/shifts' },
@@ -87,13 +57,11 @@ const DashboardLayout = () => {
         { name: 'Org. Structure', path: '/admin/org-structure' },
         { name: 'Announcements', path: '/admin/announcements' },
         { name: 'Biometric Manager', path: '/admin/biometrics', enhanced: true },
-        { name: 'Unify Sync Status', path: '/admin/unify-sync', enhanced: true }
+        { name: 'Unify Sync', path: '/admin/unify-sync', enhanced: true }
       ]
     },
     { name: 'Assets', path: '/assets', icon: <Package size={20} /> },
-    { 
-      name: 'Settings', 
-      icon: <Settings size={20} />,
+    { name: 'Settings', icon: <Settings size={20} />,
       subItems: [
         { name: 'App Settings', path: '/settings/app' },
         { name: 'Leave Settings', path: '/settings/leave' },
@@ -107,13 +75,12 @@ const DashboardLayout = () => {
 
   return (
     <div className="app-container">
-      {/* Sidebar */}
-      <aside className="sidebar" style={{ overflowY: 'auto' }}>
+      <aside className="sidebar">
         <div className="sidebar-header">
-          <div style={{ width: '32px', height: '32px', background: 'var(--color-primary)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span style={{ color: 'white', fontWeight: 'bold' }}>M</span>
+          <div style={{ width: '36px', height: '36px', background: 'linear-gradient(135deg, #6366f1, #4f46e5)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)' }}>
+            <span style={{ color: 'white', fontWeight: 'bold', fontSize: '16px' }}>M</span>
           </div>
-          MaskPro HRIS
+          <span>MaskPro <span style={{ color: '#818cf8' }}>HRIS</span></span>
         </div>
         
         <nav className="sidebar-nav">
@@ -121,33 +88,24 @@ const DashboardLayout = () => {
             <div key={item.name}>
               {item.subItems ? (
                 <>
-                  <div 
-                    className="nav-item cursor-pointer" 
-                    onClick={() => toggleMenu(item.name)}
-                    style={{ justifyContent: 'space-between', paddingRight: '1rem', cursor: 'pointer' }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      {item.icon}
-                      <span>{item.name}</span>
+                  <div className="nav-item" onClick={() => toggleMenu(item.name)} style={{ justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      {item.icon}<span>{item.name}</span>
                     </div>
-                    {expandedMenus[item.name] ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                    {expandedMenus[item.name] ? <ChevronDown size={14} style={{ opacity: 0.5 }} /> : <ChevronRight size={14} style={{ opacity: 0.5 }} />}
                   </div>
                   {expandedMenus[item.name] && (
-                    <div className="sub-menu" style={{ marginLeft: '2.5rem', marginTop: '0.25rem', marginBottom: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <div className="sub-menu" style={{ marginLeft: '44px', marginTop: '4px', marginBottom: '8px', display: 'flex', flexDirection: 'column', gap: '2px', animation: 'slideDown 0.2s ease-out' }}>
                       {item.subItems.map(sub => (
-                        <NavLink
-                          key={sub.name}
-                          to={sub.path}
+                        <NavLink key={sub.name} to={sub.path}
                           style={({ isActive }) => ({
-                            fontSize: '0.875rem',
-                            color: isActive ? 'var(--color-primary)' : 'var(--color-text-muted)',
-                            textDecoration: 'none',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem'
+                            fontSize: '13px', padding: '7px 0',
+                            color: isActive ? '#818cf8' : 'rgba(255,255,255,0.45)',
+                            textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px',
+                            transition: 'all 0.2s ease', fontWeight: isActive ? '600' : '400'
                           })}
                         >
-                          {sub.enhanced && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} title="MaskPro Enhanced Feature"></span>}
+                          {sub.enhanced && <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10b981', flexShrink: 0 }} />}
                           {sub.name}
                         </NavLink>
                       ))}
@@ -155,51 +113,49 @@ const DashboardLayout = () => {
                   )}
                 </>
               ) : (
-                <NavLink
-                  to={item.path}
-                  className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-                >
-                  {item.icon}
-                  <span>{item.name}</span>
+                <NavLink to={item.path} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} style={{ position: 'relative' }}>
+                  {item.icon}<span>{item.name}</span>
                 </NavLink>
               )}
             </div>
           ))}
         </nav>
         
-        <div style={{ padding: '1rem', borderTop: '1px solid var(--sidebar-active)', marginTop: 'auto' }}>
-          <div className="nav-item cursor-pointer" style={{ color: '#ef4444', cursor: 'pointer' }} onClick={handleLogout}>
-            <LogOut size={20} />
-            <span>Logout</span>
+        <div style={{ padding: '16px', borderTop: '1px solid rgba(255,255,255,0.06)', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '12px', background: 'rgba(255,255,255,0.04)' }}>
+            <div className="avatar avatar-md" style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)' }}>
+              {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: '13px', fontWeight: '600', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.full_name || 'User'}</div>
+              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>{user?.access_level || 'Staff'}</div>
+            </div>
+            <LogOut size={16} style={{ color: '#f43f5e', cursor: 'pointer', flexShrink: 0 }} onClick={handleLogout} />
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="main-content">
-        {/* Top Header */}
-        <header className="top-header glass">
+        <header className="top-header">
           <div>
-            <h2 style={{ fontSize: '1.25rem', margin: 0 }}>HRIS Portal</h2>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: '700', margin: 0, background: 'linear-gradient(135deg, #6366f1, #4f46e5)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>HRIS Portal</h2>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <div style={{ position: 'relative', cursor: 'pointer' }}>
-              <Bell size={20} color="var(--color-text-muted)" />
-              <span style={{ position: 'absolute', top: '-4px', right: '-4px', background: '#ef4444', color: 'white', fontSize: '0.65rem', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%' }}>3</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ position: 'relative', cursor: 'pointer', padding: '8px', borderRadius: '12px', background: 'rgba(99, 102, 241, 0.06)' }}>
+              <Bell size={18} color="#6366f1" />
+              <span style={{ position: 'absolute', top: '4px', right: '4px', background: 'linear-gradient(135deg, #f43f5e, #e11d48)', color: 'white', fontSize: '9px', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', fontWeight: '700' }}>3</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontWeight: '600', fontSize: '0.875rem' }}>{user?.full_name || 'User'}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>{user?.access_level || 'Staff'}</div>
+                <div style={{ fontWeight: '600', fontSize: '13px', color: '#1e293b' }}>{user?.full_name || 'User'}</div>
+                <div style={{ fontSize: '11px', color: '#94a3b8' }}>{user?.access_level || 'Staff'}</div>
               </div>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
+              <div className="avatar avatar-md" style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)' }}>
                 {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
               </div>
             </div>
           </div>
         </header>
-
-        {/* Content Area */}
         <div className="content-area">
           <Outlet />
         </div>

@@ -23,14 +23,29 @@ router.get('/', authorize(), async (req, res) => {
 // POST create employment status
 router.post('/', authorize(['admin']), async (req, res) => {
     try {
-        const { name, color_class } = req.body;
+        const { name, color_code } = req.body;
         const [result] = await pool.query(
-            'INSERT INTO hr_employment_statuses (name, color_class) VALUES (?, ?)',
-            [name, color_class || 'bg-primary']
+            'INSERT INTO hr_employment_statuses (name, color_code) VALUES (?, ?)',
+            [name, color_code || '#6366f1']
         );
         res.json({ success: true, message: 'Employment status created', id: result.insertId });
     } catch (error) {
         console.error('Error creating employment status:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// PUT update employment status
+router.put('/:id', authorize(['admin']), async (req, res) => {
+    try {
+        const { name, color_code } = req.body;
+        await pool.query(
+            'UPDATE hr_employment_statuses SET name = ?, color_code = ? WHERE id = ?',
+            [name, color_code || '#6366f1', req.params.id]
+        );
+        res.json({ success: true, message: 'Employment status updated' });
+    } catch (error) {
+        console.error('Error updating employment status:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });

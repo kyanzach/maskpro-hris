@@ -56,5 +56,46 @@ router.get('/', authorize(), async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error fetching employees' });
     }
 });
+// @route   PUT /api/employees/:user_id
+// @desc    Update employee HR profile mapping
+// @access  Private (Admin/HR)
+router.put('/:user_id', authorize(['admin', 'hr']), async (req, res) => {
+    try {
+        const { user_id } = req.params;
+        const { 
+            biometric_uid, 
+            department_id, 
+            designation_id, 
+            employment_status_id, 
+            shift_id, 
+            base_hourly_rate, 
+            bonus_percentage 
+        } = req.body;
+
+        // Check if hr_employees record exists
+        const [existing] = await pool.query('SELECT id FROM hr_employees WHERE user_id = ?', [user_id]);
+
+        if (existing.length === 0) {
+            // Insert
+            await pool.query(`
+                INSERT INTO hr_employees (user_id, biometric_uid, department_id, designation_id, employment_status_id, shift_id, base_hourly_rate, bonus_percentage)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `, [user_id, biometric_uid || null, department_id || null, designation_id || null, employment_status_id || null, shift_id || null, base_hourly_rate || 0, bonus_percentage || 0]);
+        } else {
+            // Update
+            // Only update rate/bonus if provided (or if super admin, though middleware currently allows admin)
+            await pool.query(`
+                UPDATE hr_employees 
+                SET biometric_uid = ?, department_id = ?, designation_id = ?, employment_status_id = ?, shift_id = ?, base_hourly_rate = COALESCE(?, base_hourly_rate), bonus_percentage = COALESCE(?, bonus_percentage)
+                WHERE user_id = ?
+            `, [biometric_uid || null, department_id || null, designation_id || null, employment_status_id || null, shift_id || null, base_hourly_rate, bonus_percentage, user_id]);
+        }
+
+        res.json({ success: true, message: 'Employee profile updated successfully' });
+    } catch (error) {
+        console.error('Error updating employee:', error);
+        res.status(500).json({ success: false, message: 'Server error updating employee' });
+    }
+});
 
 module.exports = router;

@@ -184,7 +184,7 @@ export const WorkShifts = () => {
           <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: 'bold' }}>Work Shifts</h1>
           <p style={{ color: 'var(--color-text-muted)', margin: '0.25rem 0 0 0' }}>Configure operating hours and shift templates</p>
         </div>
-        <button className="btn-primary">Add Shift</button>
+        <button style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: 'white', border: 'none', padding: '12px 24px', borderRadius: '12px', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 8px 25px rgba(99,102,241,0.3)', fontFamily: 'inherit' }}>Add Shift</button>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
         {loading ? <p>Loading shifts...</p> : shifts.map(shift => (
@@ -236,7 +236,7 @@ export const ImagePayslips = () => (
             <option>Light Corporate</option>
           </select>
         </div>
-        <button className="btn-primary" style={{ width: '100%', marginTop: '1rem' }}>Generate Sample</button>
+        <button style={{ width: '100%', marginTop: '1rem', background: 'linear-gradient(135deg, #6366f1, #4f46e5)', color: 'white', border: 'none', padding: '14px', borderRadius: '12px', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 8px 25px rgba(99,102,241,0.3)', fontFamily: 'inherit' }}>Generate Sample</button>
       </div>
       
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#1e293b', borderRadius: '8px', padding: '2rem', minHeight: '400px' }}>

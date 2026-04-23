@@ -1,3 +1,22 @@
+## [v1.2.0] — 2026-04-23
+### Added
+- Built all 30+ HRIS pages with premium glassmorphism UI matching MaskPro Care design
+- Created 7 backend API routes: departments, designations, holidays, dashboard stats, employment statuses, announcements, assets
+- All Employee pages: directory with live Unify data, designations grid, employment status cards
+- Leave module: status table with approve/reject, file request form, visual calendar, summary with balance bars
+- Attendance module: daily log with punch data, detailed records, DTR override request form
+- Payroll module: payrun dashboard, payslip viewer, SSS/PhilHealth/Pag-IBIG beneficiary cards, rate matrix, blinded accounting batch
+- Administration: users & roles table, work shifts cards, departments grid, holidays table, org structure chart, announcements feed, biometric manager, Unify sync status
+- Settings: app config, leave rules, attendance thresholds, payroll defaults, CSV import tools, image payslip designer
+- Assets management page with serial number tracking
+
+### Changed
+- Complete CSS overhaul: premium glassmorphism design system (gradient cards, blur effects, smooth animations)
+- Replaced all hardcoded IPs with relative API paths
+- Login page: frosted glass MaskPro logo, clean form layout, gradient accent bar
+- Sidebar: actual MaskPro logo, indigo/cyan color scheme, expanding sub-menus
+- Fixed all dark-border-on-dark-button styling issues across the app
+
 ## [v1.1.0] — 2026-04-23
 ### Added
 - Implemented robust JWT Authentication Flow utilizing the shared Unify `users` database

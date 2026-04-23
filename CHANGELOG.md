@@ -1,3 +1,9 @@
+## [v1.4.0] — 2026-04-24
+### Added / Changed / Fixed
+- **API:** Created the `POST /api/attendance/sync` receiver route to catch raw punches from the biometric bridge on the Mini-PC.
+- **Database:** Added `hr_biometric_logs` table to safely store immutable, raw biometric punches using `INSERT IGNORE` to prevent duplicate timestamps.
+- **Docs:** Generated a comprehensive `project_roadmap.md` mapping out the transition from Foundation (Phase 1) to Live Attendance Processing (Phase 2).
+
 ## [v1.3.6] — 2026-04-24
 ### Added / Changed / Fixed
 - **Fix:** Fixed an issue where editing a `WorkShift` silently failed and reverted state due to a missing `PUT /api/shifts/:id` route in the backend API.

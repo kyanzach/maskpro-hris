@@ -1,5 +1,6 @@
-import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import { 
   LayoutDashboard, 
   Users, 
@@ -13,6 +14,14 @@ import {
 } from 'lucide-react';
 
 const DashboardLayout = () => {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const navItems = [
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
     { name: 'Job Desk', path: '/job-desk', icon: <Users size={20} /> },
@@ -48,7 +57,7 @@ const DashboardLayout = () => {
         </nav>
         
         <div style={{ padding: '1rem', borderTop: '1px solid var(--sidebar-active)' }}>
-          <div className="nav-item" style={{ color: '#ef4444' }}>
+          <div className="nav-item cursor-pointer" style={{ color: '#ef4444', cursor: 'pointer' }} onClick={handleLogout}>
             <LogOut size={20} />
             <span>Logout</span>
           </div>
@@ -69,11 +78,11 @@ const DashboardLayout = () => {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontWeight: '600', fontSize: '0.875rem' }}>Admin User</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>HR Manager</div>
+                <div style={{ fontWeight: '600', fontSize: '0.875rem' }}>{user?.full_name || 'User'}</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}>{user?.access_level || 'Staff'}</div>
               </div>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold' }}>
-                A
+                {user?.full_name ? user.full_name.charAt(0).toUpperCase() : 'U'}
               </div>
             </div>
           </div>

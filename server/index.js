@@ -5,27 +5,17 @@ process.env.TZ = 'Asia/Manila';
 
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2/promise');
+const pool = require('./config/db');
 
 const app = express();
-const port = process.env.PORT || 3001;
-
-// Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Parse JSON bodies
 
-// Database Connection Pool
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  timezone: '+08:00', // STRICT TIMEZONE COMPLIANCE: Force MySQL session to Asia/Manila
-  dateStrings: true // Return dates as strings to avoid JS Date object timezone shifts
-});
+const PORT = process.env.PORT || 3001;
+
+// Routes
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 
 // Basic Health Check Route
 app.get('/api/health', async (req, res) => {
@@ -39,6 +29,6 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`HRIS Backend Server running on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`HRIS Backend Server running on port ${PORT}`);
 });

@@ -21,20 +21,44 @@ router.get('/', authorize(), async (req, res) => {
 // @access  Private (Admin)
 router.post('/', authorize(['admin', 'hr']), async (req, res) => {
     try {
-        const { name, start_time, end_time, is_default } = req.body;
+        const { name, start_time, end_time, late_grace_period_mins, is_default } = req.body;
         
         if (is_default) {
             await pool.query('UPDATE hr_shifts SET is_default = FALSE');
         }
 
         const [result] = await pool.query(
-            'INSERT INTO hr_shifts (name, start_time, end_time, is_default) VALUES (?, ?, ?, ?)',
-            [name, start_time, end_time, is_default || false]
+            'INSERT INTO hr_shifts (name, start_time, end_time, late_grace_period_mins, is_default) VALUES (?, ?, ?, ?, ?)',
+            [name, start_time, end_time, late_grace_period_mins || 15, is_default || false]
         );
 
         res.json({ success: true, message: 'Shift created successfully', id: result.insertId });
     } catch (error) {
         console.error('Error creating shift:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
+// @route   PUT /api/shifts/:id
+// @desc    Update an existing shift
+// @access  Private (Admin)
+router.put('/:id', authorize(['admin', 'hr']), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, start_time, end_time, late_grace_period_mins, is_default } = req.body;
+        
+        if (is_default) {
+            await pool.query('UPDATE hr_shifts SET is_default = FALSE');
+        }
+
+        await pool.query(
+            'UPDATE hr_shifts SET name = ?, start_time = ?, end_time = ?, late_grace_period_mins = ?, is_default = ? WHERE id = ?',
+            [name, start_time, end_time, late_grace_period_mins || 15, is_default || false, id]
+        );
+
+        res.json({ success: true, message: 'Shift updated successfully' });
+    } catch (error) {
+        console.error('Error updating shift:', error);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 });

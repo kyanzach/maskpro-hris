@@ -8,7 +8,7 @@ import { AllEmployees, Designations, EmploymentStatus, Departments, Holiday, Ann
 import { LeaveStatus, LeaveRequest, LeaveCalendar, LeaveSummary } from './pages/LeavePages';
 import { RateMatrix, ImagePayslips } from './pages/PlaceholderPages';
 import { AttendanceDailyLog, AttendanceDetails, AttendanceRequest } from './pages/AttendancePages';
-import { AttendanceDetails, AttendanceRequest, Payrun, Payslip, Beneficiary, AccountingBatch, UsersRoles, OrgStructure, BiometricManager, UnifySync, AppSettings, LeaveSettings, AttendanceSettings, PayrollSettings, Import } from './pages/AdminPages';
+import { Payrun, Payslip, Beneficiary, AccountingBatch, UsersRoles, OrgStructure, BiometricManager, UnifySync, AppSettings, LeaveSettings, AttendanceSettings, PayrollSettings, Import } from './pages/AdminPages';
 import { ProfileSettings } from './pages/ProfileSettings';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';

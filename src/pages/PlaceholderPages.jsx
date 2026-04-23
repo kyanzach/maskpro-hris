@@ -54,56 +54,7 @@ export const LeaveRequest = () => <div className="p-8"><h1 className="text-2xl f
 export const LeaveCalendar = () => <div className="p-8"><h1 className="text-2xl font-bold">Leave Calendar</h1><p>Visual calendar of who is away.</p></div>;
 export const LeaveSummary = () => <div className="p-8"><h1 className="text-2xl font-bold">Leave Summary</h1><p>Annual leave reports.</p></div>;
 
-export const AttendanceDailyLog = () => {
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch('/api/attendance/daily', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
-      .then(r => r.json())
-      .then(d => { setLogs(d.data || []); setLoading(false); });
-  }, []);
-
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h1 style={{ fontSize: '1.75rem', fontWeight: 'bold', marginBottom: '1rem' }}>Daily Attendance Log</h1>
-      <div style={{ background: 'white', borderRadius: '8px', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead>
-            <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--color-border)' }}>
-              <th style={{ padding: '1rem' }}>Employee</th>
-              <th style={{ padding: '1rem' }}>Punch In</th>
-              <th style={{ padding: '1rem' }}>Punch Out</th>
-              <th style={{ padding: '1rem' }}>Status</th>
-              <th style={{ padding: '1rem' }}>Total Hours</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? <tr><td colSpan="5" style={{ padding: '2rem', textAlign: 'center' }}>Loading...</td></tr> :
-              logs.length === 0 ? <tr><td colSpan="5" style={{ padding: '2rem', textAlign: 'center' }}>No attendance records for today.</td></tr> :
-              logs.map(log => (
-                <tr key={log.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  <td style={{ padding: '1rem' }}>{log.full_name}</td>
-                  <td style={{ padding: '1rem' }}>{log.in_time ? new Date(log.in_time).toLocaleTimeString() : '--'}</td>
-                  <td style={{ padding: '1rem' }}>{log.out_time ? new Date(log.out_time).toLocaleTimeString() : '--'}</td>
-                  <td style={{ padding: '1rem' }}>
-                    <span style={{ padding: '0.25rem 0.5rem', background: log.status === 'Present' ? '#d1fae5' : '#fee2e2', color: log.status === 'Present' ? '#065f46' : '#991b1b', borderRadius: '4px', fontSize: '0.875rem' }}>
-                      {log.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: '1rem' }}>{log.total_work_hours} hrs</td>
-                </tr>
-              ))
-            }
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
-
-export const AttendanceDetails = () => <div className="p-8"><h1 className="text-2xl font-bold">Attendance Details</h1><p>Deep-dive into punch timestamps.</p></div>;
-export const AttendanceRequest = () => <div className="p-8"><h1 className="text-2xl font-bold">Attendance Requests</h1><p>Manual DTR overrides.</p></div>;
 
 export const Payrun = () => <div className="p-8"><h1 className="text-2xl font-bold">Payrun</h1><p>Batch process payroll calculations.</p></div>;
 export const Payslip = () => <div className="p-8"><h1 className="text-2xl font-bold">Payslips</h1><p>View generated payslips.</p></div>;

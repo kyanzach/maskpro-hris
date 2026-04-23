@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 const { authorize } = require('../middleware/auth');
+const { processDTR } = require('../cron/attendanceJob');
 
 // @route   GET /api/attendance/daily
 // @desc    Get daily attendance log
@@ -15,6 +16,8 @@ router.get('/daily', authorize(), async (req, res) => {
                 a.id,
                 a.punch_date,
                 a.in_time,
+                a.break_out_time,
+                a.break_in_time,
                 a.out_time,
                 a.status,
                 a.late_minutes,
@@ -130,6 +133,63 @@ router.post('/sync', async (req, res) => {
     } catch (error) {
         console.error('Biometric Sync Error:', error);
         res.status(500).json({ success: false, message: 'Server error during sync' });
+    }
+});
+
+// @route   POST /api/attendance/process
+// @desc    Manually trigger DTR logic processing
+// @access  Private (Admin/HR)
+router.post('/process', authorize(['admin', 'hr']), async (req, res) => {
+    try {
+        await processDTR();
+        res.json({ success: true, message: 'DTR Processing completed successfully.' });
+    } catch (error) {
+        console.error('Manual Process Error:', error);
+        res.status(500).json({ success: false, message: 'Server error during processing' });
+    }
+});
+
+// @route   PUT /api/attendance/:id/override
+// @desc    Manually override an attendance record (fix missing punch)
+// @access  Private (Admin/HR)
+router.put('/:id/override', authorize(['admin', 'hr']), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { in_time, break_out_time, break_in_time, out_time, status, admin_notes } = req.body;
+
+        // Fetch original to calculate new total_work_hours
+        const [existing] = await pool.query('SELECT * FROM hr_attendance WHERE id = ?', [id]);
+        if (existing.length === 0) return res.status(404).json({ success: false, message: 'Record not found' });
+
+        // Calculate hours
+        let totalHours = 0;
+        const inDate = in_time ? new Date(in_time) : null;
+        const boutDate = break_out_time ? new Date(break_out_time) : null;
+        const binDate = break_in_time ? new Date(break_in_time) : null;
+        const outDate = out_time ? new Date(out_time) : null;
+
+        if (inDate && outDate) {
+            if (boutDate && binDate) {
+                totalHours = (((boutDate - inDate) + (outDate - binDate)) / (1000 * 60 * 60)).toFixed(2);
+            } else {
+                totalHours = ((outDate - inDate) / (1000 * 60 * 60)).toFixed(2);
+            }
+        }
+
+        const query = `
+            UPDATE hr_attendance 
+            SET in_time = ?, break_out_time = ?, break_in_time = ?, out_time = ?, status = ?, total_work_hours = ?, sync_source = 'Manual', admin_notes = ?
+            WHERE id = ?
+        `;
+        await pool.query(query, [
+            in_time || null, break_out_time || null, break_in_time || null, out_time || null, 
+            status, totalHours, admin_notes || null, id
+        ]);
+
+        res.json({ success: true, message: 'Attendance record manually updated' });
+    } catch (error) {
+        console.error('Override Error:', error);
+        res.status(500).json({ success: false, message: 'Server error during override' });
     }
 });
 

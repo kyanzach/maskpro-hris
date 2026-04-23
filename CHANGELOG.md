@@ -1,3 +1,11 @@
+## [v1.6.0] — 2026-04-24
+### Added / Changed / Fixed
+- **Feature (Daily Time Record):** Implemented the backend DTR processing engine. It automatically maps raw biometric logs into a 4-punch structure (In Time, Break Out, Break In, Out Time) to calculate late minutes and total work hours accurately against the employee's assigned Work Shift.
+- **Feature (Cron Job):** The DTR processing engine runs automatically as a background job every day at 11:55 PM (Asia/Manila time).
+- **Feature (Attendance Log UI):** Built a robust Daily Attendance Log in the HRIS admin panel. It features a modern data table, visual status badges, and a date picker to fetch historical DTR records.
+- **Feature (Manual Override):** Added a Manual Override modal for HR Admins to correct missing punches, assign "Half Day" or "Absent" statuses, and leave audit notes.
+- **Database:** Added `break_out_time` and `break_in_time` columns to the `hr_attendance` table to accurately track lunch breaks.
+
 ## [v1.5.0] — 2026-04-24
 ### Added / Changed / Fixed
 - **Feature (Mini-PC Kiosk):** Completely refactored the Biometric Bridge to run a local Express & WebSocket server. It now serves a beautiful, full-screen glass-morphism Kiosk UI that reacts in real-time to fingerprint punches, displaying the user's name, profile picture, and a randomized motivational Bible verse.

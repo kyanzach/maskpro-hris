@@ -7,50 +7,7 @@ const card = { background: 'var(--glass-bg)', backdropFilter: 'blur(20px)', bord
 const th = { padding: '14px 20px', fontSize: '12px', fontWeight: '600', color: '#64748b', textAlign: 'left', textTransform: 'uppercase', letterSpacing: '0.5px', background: 'linear-gradient(135deg, #f8fafc, #f1f5f9)' };
 const td = { padding: '16px 20px', borderBottom: '1px solid rgba(99,102,241,0.06)', fontSize: '14px' };
 
-export const AttendanceDetails = () => {
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    fetch('/api/attendance/daily', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
-      .then(r => r.json()).then(d => { setLogs(d.data || []); setLoading(false); });
-  }, []);
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h1 style={{ margin: '0 0 8px 0', fontSize: '1.75rem', fontWeight: '800' }}>Attendance Details</h1>
-      <p style={{ color: '#64748b', marginBottom: '2rem' }}>Detailed punch-by-punch attendance records</p>
-      <div style={card}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead><tr><th style={th}>Employee</th><th style={th}>Date</th><th style={th}>In Time</th><th style={th}>Out Time</th><th style={th}>Late (min)</th><th style={th}>Total Hrs</th><th style={th}>Status</th></tr></thead>
-          <tbody>{loading ? <tr><td colSpan="7" style={{ ...td, textAlign: 'center', padding: '3rem' }}>Loading...</td></tr> :
-            logs.length === 0 ? <tr><td colSpan="7" style={{ ...td, textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>No attendance data available.</td></tr> :
-            logs.map(l => (<tr key={l.id}><td style={{ ...td, fontWeight: '500' }}>{l.full_name}</td><td style={td}>{l.punch_date}</td><td style={td}>{l.in_time ? new Date(l.in_time).toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' }) : '—'}</td><td style={td}>{l.out_time ? new Date(l.out_time).toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' }) : '—'}</td><td style={td}>{l.late_minutes || 0}</td><td style={{ ...td, fontWeight: '600' }}>{l.total_work_hours || '—'}</td><td style={td}><span className={`badge ${l.status === 'Present' ? 'badge-success' : 'badge-danger'}`}>{l.status}</span></td></tr>))}</tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
 
-export const AttendanceRequest = () => (
-  <div style={{ padding: '2rem' }}>
-    <h1 style={{ margin: '0 0 8px 0', fontSize: '1.75rem', fontWeight: '800' }}>Attendance Request</h1>
-    <p style={{ color: '#64748b', marginBottom: '2rem' }}>Submit manual DTR override requests</p>
-    <div style={{ ...card, padding: '32px', maxWidth: '600px' }}>
-      <div style={{ marginBottom: '20px' }}><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Request Type</label>
-        <select style={{ width: '100%', padding: '12px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '14px', fontFamily: 'inherit', background: '#f8fafc' }}>
-          <option>Missing Punch-In</option><option>Missing Punch-Out</option><option>Wrong Time Correction</option><option>Work From Home</option>
-        </select></div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
-        <div><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Date</label>
-          <input type="date" style={{ width: '100%', padding: '12px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '14px', fontFamily: 'inherit', background: '#f8fafc' }} /></div>
-        <div><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Correct Time</label>
-          <input type="time" style={{ width: '100%', padding: '12px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '14px', fontFamily: 'inherit', background: '#f8fafc' }} /></div>
-      </div>
-      <div style={{ marginBottom: '24px' }}><label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '8px' }}>Reason</label>
-        <textarea rows="3" placeholder="Explain the correction needed..." style={{ width: '100%', padding: '12px 16px', border: '2px solid #e2e8f0', borderRadius: '12px', fontSize: '14px', fontFamily: 'inherit', background: '#f8fafc', resize: 'vertical' }} /></div>
-      <button style={{ ...btn, width: '100%' }}>Submit Request</button>
-    </div>
-  </div>
-);
 
 export const Payrun = () => (
   <div style={{ padding: '2rem' }}>

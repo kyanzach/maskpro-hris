@@ -55,6 +55,10 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
+// Initialize Cron Jobs
+const { startCron } = require('./cron/attendanceJob');
+startCron();
+
 app.listen(PORT, () => {
   console.log(`HRIS Backend Server running on port ${PORT}`);
 });

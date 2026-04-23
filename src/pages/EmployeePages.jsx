@@ -17,7 +17,7 @@ export const AllEmployees = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEmp, setEditingEmp] = useState(null);
   const [formData, setFormData] = useState({
-    department_id: '', designation_id: '', employment_status_id: '', shift_id: '', base_hourly_rate: 0, bonus_percentage: 0, biometric_uid: ''
+    department_id: '', designation_id: '', employment_status_id: '', shift_id: '', base_hourly_rate: 0, overtime_rate: 0, biometric_uid: ''
   });
 
   // Reference data for dropdowns
@@ -55,7 +55,7 @@ export const AllEmployees = () => {
       employment_status_id: emp.employment_status_id || '',
       shift_id: emp.shift_id || '',
       base_hourly_rate: emp.base_hourly_rate || 0,
-      bonus_percentage: emp.bonus_percentage || 0,
+      overtime_rate: emp.overtime_rate || 0,
       biometric_uid: emp.biometric_uid || ''
     });
     setModalOpen(true);
@@ -195,8 +195,8 @@ export const AllEmployees = () => {
                     <input type="number" step="0.01" value={formData.base_hourly_rate} onChange={e => setFormData({...formData, base_hourly_rate: parseFloat(e.target.value)})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #e2e8f0', outline: 'none' }} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#10b981' }}>Bonus Percentage (%)</label>
-                    <input type="number" step="0.01" value={formData.bonus_percentage} onChange={e => setFormData({...formData, bonus_percentage: parseFloat(e.target.value)})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #e2e8f0', outline: 'none' }} />
+                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '8px', color: '#10b981' }}>Overtime Rate (₱/hr)</label>
+                    <input type="number" step="0.01" value={formData.overtime_rate} onChange={e => setFormData({...formData, overtime_rate: parseFloat(e.target.value)})} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '2px solid #e2e8f0', outline: 'none' }} />
                   </div>
                 </div>
               )}

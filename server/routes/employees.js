@@ -19,8 +19,12 @@ router.get('/', authorize(), async (req, res) => {
                 u.branch_id,
                 h.id as hr_id,
                 h.biometric_uid,
+                h.department_id,
+                h.designation_id,
+                h.employment_status_id,
+                h.shift_id,
                 h.base_hourly_rate,
-                h.bonus_percentage,
+                h.overtime_rate,
                 d.name as department_name,
                 des.name as designation_name,
                 s.name as employment_status,
@@ -45,7 +49,7 @@ router.get('/', authorize(), async (req, res) => {
         const formattedEmployees = employees.map(emp => {
             if (!isSuperAdmin) {
                 delete emp.base_hourly_rate;
-                delete emp.bonus_percentage;
+                delete emp.overtime_rate;
             }
             return emp;
         });
@@ -69,7 +73,7 @@ router.put('/:user_id', authorize(['admin', 'hr']), async (req, res) => {
             employment_status_id, 
             shift_id, 
             base_hourly_rate, 
-            bonus_percentage 
+            overtime_rate 
         } = req.body;
 
         // Check if hr_employees record exists
@@ -78,17 +82,17 @@ router.put('/:user_id', authorize(['admin', 'hr']), async (req, res) => {
         if (existing.length === 0) {
             // Insert
             await pool.query(`
-                INSERT INTO hr_employees (user_id, biometric_uid, department_id, designation_id, employment_status_id, shift_id, base_hourly_rate, bonus_percentage)
+                INSERT INTO hr_employees (user_id, biometric_uid, department_id, designation_id, employment_status_id, shift_id, base_hourly_rate, overtime_rate)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            `, [user_id, biometric_uid || null, department_id || null, designation_id || null, employment_status_id || null, shift_id || null, base_hourly_rate || 0, bonus_percentage || 0]);
+            `, [user_id, biometric_uid || null, department_id || null, designation_id || null, employment_status_id || null, shift_id || null, base_hourly_rate || 0, overtime_rate || 0]);
         } else {
             // Update
             // Only update rate/bonus if provided (or if super admin, though middleware currently allows admin)
             await pool.query(`
                 UPDATE hr_employees 
-                SET biometric_uid = ?, department_id = ?, designation_id = ?, employment_status_id = ?, shift_id = ?, base_hourly_rate = COALESCE(?, base_hourly_rate), bonus_percentage = COALESCE(?, bonus_percentage)
+                SET biometric_uid = ?, department_id = ?, designation_id = ?, employment_status_id = ?, shift_id = ?, base_hourly_rate = COALESCE(?, base_hourly_rate), overtime_rate = COALESCE(?, overtime_rate)
                 WHERE user_id = ?
-            `, [biometric_uid || null, department_id || null, designation_id || null, employment_status_id || null, shift_id || null, base_hourly_rate, bonus_percentage, user_id]);
+            `, [biometric_uid || null, department_id || null, designation_id || null, employment_status_id || null, shift_id || null, base_hourly_rate, overtime_rate, user_id]);
         }
 
         res.json({ success: true, message: 'Employee profile updated successfully' });

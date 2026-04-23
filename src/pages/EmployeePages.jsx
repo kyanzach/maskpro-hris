@@ -156,7 +156,7 @@ export const Departments = () => {
         <button style={btn}><Plus size={16} /> Add Department</button>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.25rem' }}>
-        {loading ? <p>Loading...</p> : data.length === 0 ? <p style={{ color: '#94a3b8' }}>No departments yet. Create HQ, Cebu Branch, etc.</p> :
+        {loading ? <p>Loading...</p> : data.length === 0 ? <p style={{ color: '#94a3b8' }}>No departments yet. Create Davao Obrero, Davao Ecoland, etc.</p> :
           data.map(d => (
             <div key={d.id} style={{ ...card, padding: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>

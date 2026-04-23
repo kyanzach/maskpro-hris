@@ -207,7 +207,7 @@ export const WorkShifts = () => {
     </div>
   );
 };
-export const Departments = () => <div className="p-8"><h1 className="text-2xl font-bold">Departments</h1><p>HQ, Cebu, CDO, etc.</p></div>;
+export const Departments = () => <div className="p-8"><h1 className="text-2xl font-bold">Departments</h1><p>Davao Obrero, Davao Ecoland, etc.</p></div>;
 export const Holiday = () => <div className="p-8"><h1 className="text-2xl font-bold">Holidays</h1><p>Public and special holidays.</p></div>;
 export const OrgStructure = () => <div className="p-8"><h1 className="text-2xl font-bold">Org. Structure</h1><p>Hierarchy tree chart.</p></div>;
 export const Announcements = () => <div className="p-8"><h1 className="text-2xl font-bold">Announcements</h1><p>Company broadcasts.</p></div>;

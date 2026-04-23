@@ -82,4 +82,55 @@ router.post('/punch', authorize(), async (req, res) => {
     }
 });
 
+// @route   POST /api/attendance/sync
+// @desc    Receive raw punch logs from biometric bridge
+// @access  Private (API Key)
+router.post('/sync', async (req, res) => {
+    try {
+        const apiKey = req.headers['x-api-key'];
+        // Using a simple API key check for the bridge
+        if (!apiKey || apiKey !== process.env.HRIS_API_KEY) {
+            return res.status(401).json({ success: false, message: 'Unauthorized API Key' });
+        }
+
+        const { logs } = req.body;
+        if (!logs || !Array.isArray(logs)) {
+            return res.status(400).json({ success: false, message: 'Invalid payload' });
+        }
+
+        let insertedCount = 0;
+        let skippedCount = 0;
+
+        for (const log of logs) {
+            try {
+                // Ensure timestamp is properly formatted for MySQL DATETIME
+                const recordTime = new Date(log.timestamp).toISOString().slice(0, 19).replace('T', ' ');
+                
+                // Use INSERT IGNORE to gracefully skip duplicate punches
+                const [result] = await pool.query(
+                    'INSERT IGNORE INTO hr_biometric_logs (biometric_uid, record_time, punch_state) VALUES (?, ?, ?)',
+                    [log.biometric_uid, recordTime, log.status || 1]
+                );
+
+                if (result.affectedRows > 0) {
+                    insertedCount++;
+                } else {
+                    skippedCount++;
+                }
+            } catch (err) {
+                console.error('Error inserting log:', err);
+                // Continue with other logs
+            }
+        }
+
+        res.json({ 
+            success: true, 
+            message: `Sync complete. Inserted: ${insertedCount}, Skipped/Duplicates: ${skippedCount}` 
+        });
+    } catch (error) {
+        console.error('Biometric Sync Error:', error);
+        res.status(500).json({ success: false, message: 'Server error during sync' });
+    }
+});
+
 module.exports = router;

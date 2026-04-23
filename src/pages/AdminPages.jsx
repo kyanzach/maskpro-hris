@@ -143,42 +143,166 @@ export const UsersRoles = () => {
 
 export const OrgStructure = () => {
   const [employees, setEmployees] = useState([]);
+  const [activeBranch, setActiveBranch] = useState(1);
+  const [selectedEmp, setSelectedEmp] = useState(null);
+
   useEffect(() => {
     fetch('/api/employees', { headers: { 'Authorization': `Bearer ${localStorage.getItem('hris_token')}` }})
       .then(r => r.json()).then(d => setEmployees(d.data || [])).catch(() => {});
   }, []);
+
+  const branches = [
+    { id: 1, name: 'Davao Obrero', color: '#10b981' },
+    { id: 5, name: 'Davao Ecoland', color: '#06b6d4' },
+    { id: null, name: 'HQ / Unassigned', color: '#6366f1' }
+  ];
+
+  const filteredEmployees = employees.filter(e => e.branch_id === activeBranch || (activeBranch === null && !e.branch_id));
+  
   const depts = {};
-  employees.forEach(e => { const d = e.department_name || 'Unassigned'; if (!depts[d]) depts[d] = []; depts[d].push(e); });
-  const nodeStyle = (bg) => ({ padding: '12px 20px', background: bg, borderRadius: '14px', fontSize: '13px', fontWeight: '600', textAlign: 'center', minWidth: '140px' });
+  filteredEmployees.forEach(e => { 
+    const d = e.department_name || 'General'; 
+    if (!depts[d]) depts[d] = []; 
+    depts[d].push(e); 
+  });
+
+  const nodeStyle = (bg, border) => ({ 
+    padding: '12px 20px', background: bg, borderRadius: '16px', fontSize: '13px', 
+    fontWeight: '600', textAlign: 'center', minWidth: '160px', border: `2px solid ${border}`,
+    boxShadow: '0 4px 15px rgba(0,0,0,0.05)', position: 'relative', zIndex: 2
+  });
+
+  const lineStyle = { width: '2px', background: '#cbd5e1', margin: '0 auto', position: 'relative', zIndex: 1 };
+  const hLineStyle = { height: '2px', background: '#cbd5e1', width: '100%', position: 'absolute', top: 0, left: 0, zIndex: 1 };
+
   return (
     <div style={{ padding: '2rem' }}>
-      <h1 style={{ margin: '0 0 8px 0', fontSize: '1.75rem', fontWeight: '800' }}>Org. Structure</h1>
-      <p style={{ color: '#64748b', marginBottom: '2rem' }}>Company hierarchy and reporting lines</p>
-      <div style={{ ...card, padding: '48px', overflowX: 'auto' }}>
-        <div style={{ textAlign: 'center', minWidth: '700px' }}>
-          <div style={nodeStyle('linear-gradient(135deg, #6366f1, #4f46e5)')}>
-            <span style={{ color: 'white' }}>Ryan & Karen Paco</span>
-            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.7)', marginTop: '2px' }}>Owners / Admin</div>
-          </div>
-          <div style={{ width: '2px', height: '32px', background: '#e2e8f0', margin: '0 auto' }} />
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
-            {[{ name: 'Davao Obrero', color: '#10b981' }, { name: 'Gensan', color: '#f59e0b' }, { name: 'Davao Ecoland', color: '#06b6d4' }].map(b => (
-              <div key={b.name} style={{ textAlign: 'center' }}>
-                <div style={{ width: '2px', height: '24px', background: '#e2e8f0', margin: '0 auto' }} />
-                <div style={{ ...nodeStyle(`${b.color}15`), border: `2px solid ${b.color}`, color: b.color }}>{b.name} Branch</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ width: '2px', height: '32px', background: '#e2e8f0', margin: '16px auto 0' }} />
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginTop: '0' }}>
-            {Object.entries(depts).map(([dept, members]) => (
-              <div key={dept} style={{ ...nodeStyle('#f1f5f9'), border: '1px solid #e2e8f0', color: '#374151' }}>
-                {dept} <span style={{ color: '#94a3b8', fontWeight: '400' }}>({members.length})</span>
-              </div>
-            ))}
-          </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div>
+          <h1 style={{ margin: '0 0 8px 0', fontSize: '1.75rem', fontWeight: '800' }}>Org. Structure</h1>
+          <p style={{ color: '#64748b', margin: 0 }}>Interactive company hierarchy and reporting lines</p>
+        </div>
+        <div style={{ display: 'flex', gap: '8px', background: 'white', padding: '6px', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+          {branches.map(b => (
+            <button key={b.name} onClick={() => setActiveBranch(b.id)} style={{ 
+              padding: '8px 16px', borderRadius: '10px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', border: 'none', transition: 'all 0.3s ease',
+              background: activeBranch === b.id ? b.color : 'transparent', color: activeBranch === b.id ? 'white' : '#64748b'
+            }}>
+              {b.name}
+            </button>
+          ))}
         </div>
       </div>
+
+      <div style={{ ...card, padding: '48px', overflowX: 'auto', minHeight: '600px', background: 'linear-gradient(180deg, #f8fafc 0%, white 100%)' }}>
+        <div style={{ textAlign: 'center', minWidth: '900px', animation: 'fadeInUp 0.6s ease-out' }}>
+          
+          {/* Top Level - Owners */}
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ ...nodeStyle('linear-gradient(135deg, #6366f1, #4f46e5)', 'transparent'), color: 'white', cursor: 'pointer', transition: 'transform 0.2s' }}>
+              <div className="avatar avatar-md" style={{ background: 'rgba(255,255,255,0.2)', margin: '0 auto 8px' }}>R</div>
+              <span>Ryan & Karen Paco</span>
+              <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)', marginTop: '4px', fontWeight: '500' }}>Owners / Board</div>
+            </div>
+          </div>
+          
+          <div style={{ ...lineStyle, height: '40px' }} />
+
+          {/* Active Branch Level */}
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ ...nodeStyle('white', branches.find(b => b.id === activeBranch)?.color), color: branches.find(b => b.id === activeBranch)?.color, padding: '16px 24px' }}>
+              <div style={{ fontSize: '16px', fontWeight: '800' }}>{branches.find(b => b.id === activeBranch)?.name} Branch</div>
+              <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>{filteredEmployees.length} Total Employees</div>
+            </div>
+          </div>
+
+          <div style={{ ...lineStyle, height: '40px' }} />
+
+          {/* Departments Level */}
+          {Object.keys(depts).length === 0 ? (
+            <div style={{ padding: '3rem', color: '#94a3b8', fontSize: '14px', background: 'white', borderRadius: '16px', border: '1px dashed #cbd5e1', width: 'fit-content', margin: '0 auto' }}>
+              No employees assigned to this branch yet.
+            </div>
+          ) : (
+            <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
+              {/* Horizontal connecting line for departments */}
+              <div style={{ ...hLineStyle, width: `calc(100% - ${100 / Object.keys(depts).length}%)`, left: `calc(${50 / Object.keys(depts).length}%)` }} />
+              
+              {Object.entries(depts).map(([dept, members], i) => (
+                <div key={dept} style={{ flex: 1, textAlign: 'center', position: 'relative' }}>
+                  <div style={{ ...lineStyle, height: '24px', margin: '0 auto' }} />
+                  <div style={{ ...nodeStyle('white', '#e2e8f0'), color: '#334155', display: 'inline-block', minWidth: '180px' }}>
+                    <div style={{ fontSize: '14px', fontWeight: '700' }}>{dept}</div>
+                    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>{members.length} Members</div>
+                  </div>
+                  
+                  <div style={{ ...lineStyle, height: '24px' }} />
+                  
+                  {/* Employees in Department */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+                    {members.map((emp, j) => (
+                      <div key={emp.user_id} 
+                           onClick={() => setSelectedEmp(emp)}
+                           style={{ 
+                             background: 'white', border: selectedEmp?.user_id === emp.user_id ? '2px solid #6366f1' : '1px solid #e2e8f0', 
+                             borderRadius: '12px', padding: '12px', width: '180px', cursor: 'pointer',
+                             boxShadow: selectedEmp?.user_id === emp.user_id ? '0 8px 20px rgba(99,102,241,0.15)' : '0 2px 5px rgba(0,0,0,0.02)',
+                             transition: 'all 0.2s'
+                           }}
+                           onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.08)'; }}
+                           onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = selectedEmp?.user_id === emp.user_id ? '0 8px 20px rgba(99,102,241,0.15)' : '0 2px 5px rgba(0,0,0,0.02)'; }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <div className="avatar avatar-sm" style={{ background: 'linear-gradient(135deg, #f1f5f9, #e2e8f0)', color: '#475569', fontSize: '12px' }}>
+                            {emp.full_name?.charAt(0) || 'U'}
+                          </div>
+                          <div style={{ textAlign: 'left', overflow: 'hidden' }}>
+                            <div style={{ fontSize: '12px', fontWeight: '600', color: '#1e293b', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{emp.full_name || emp.username}</div>
+                            <div style={{ fontSize: '10px', color: '#64748b', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>{emp.unify_job_title || emp.access_level}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Employee Detail Modal/Panel overlay */}
+      {selectedEmp && (
+        <div style={{ position: 'fixed', bottom: '40px', right: '40px', background: 'var(--glass-bg)', backdropFilter: 'blur(20px)', border: '1px solid rgba(99,102,241,0.2)', padding: '24px', borderRadius: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', width: '320px', zIndex: 100 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+            <div className="avatar avatar-lg" style={{ background: 'linear-gradient(135deg, #6366f1, #4f46e5)' }}>{selectedEmp.full_name?.charAt(0) || 'U'}</div>
+            <button onClick={() => setSelectedEmp(null)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '4px' }}>✕</button>
+          </div>
+          <h3 style={{ margin: '0 0 4px 0', fontSize: '1.25rem', fontWeight: '800' }}>{selectedEmp.full_name || selectedEmp.username}</h3>
+          <p style={{ margin: '0 0 16px 0', color: '#64748b', fontSize: '13px', fontWeight: '500' }}>{selectedEmp.unify_job_title || selectedEmp.access_level}</p>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+              <span style={{ color: '#64748b', fontSize: '12px' }}>Department</span>
+              <span style={{ fontWeight: '600', fontSize: '13px' }}>{selectedEmp.department_name || 'Unassigned'}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+              <span style={{ color: '#64748b', fontSize: '12px' }}>Employment Status</span>
+              <span style={{ fontWeight: '600', fontSize: '13px' }}><span className={`badge ${selectedEmp.is_active ? 'badge-success' : 'badge-danger'}`}>{selectedEmp.is_active ? 'Active' : 'Inactive'}</span></span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+              <span style={{ color: '#64748b', fontSize: '12px' }}>Designation</span>
+              <span style={{ fontWeight: '600', fontSize: '13px' }}>{selectedEmp.designation_name || 'Standard'}</span>
+            </div>
+            {selectedEmp.base_hourly_rate && (
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px' }}>
+                <span style={{ color: '#64748b', fontSize: '12px' }}>Base Rate</span>
+                <span style={{ fontWeight: '700', fontSize: '13px', color: '#10b981' }}>₱{selectedEmp.base_hourly_rate}/hr</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

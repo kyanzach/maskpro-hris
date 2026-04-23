@@ -1,3 +1,11 @@
+## [v1.3.1] — 2026-04-23
+### Added / Changed / Fixed
+- **UI/UX:** Redesigned the Org Structure page into an interactive, animated custom tree structure.
+- **UI/UX:** Fixed the squished HRIS logo in the Dashboard layout.
+- **Logic:** Filtered out the Gensan branch (`branch_id = 2`) globally from the API so franchise staff do not appear in HRIS.
+- **Logic:** Implemented branch filtering on the new Org Structure page (defaults to Davao Obrero).
+- **Fix:** Corrected branch mapping IDs in the Job Desk UI to match the Unify database.
+
 ## [v1.3.0] — 2026-04-23
 ### Added / Changed / Fixed
 - Seeded production database with functional departments and correctly mapped 23 employees

@@ -53,7 +53,7 @@ const JobDesk = () => {
               <Briefcase size={16} color="#6366f1" /> {user?.department_name || 'Department TBD'}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '14px' }}>
-              <MapPin size={16} color="#f43f5e" /> {user?.branch_id === 2 ? 'Davao Ecoland' : user?.branch_id === 3 ? 'Gensan' : 'Davao Obrero'}
+              <MapPin size={16} color="#f43f5e" /> {user?.branch_id === 5 ? 'Davao Ecoland' : user?.branch_id === 2 ? 'Gensan' : 'Davao Obrero'}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748b', fontSize: '14px' }}>
               <Mail size={16} color="#10b981" /> {user?.username}@maskpro.ph

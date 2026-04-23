@@ -15,7 +15,10 @@ const PORT = process.env.PORT || 3001;
 
 // Routes
 const authRoutes = require('./routes/auth');
+const employeeRoutes = require('./routes/employees');
+
 app.use('/api/auth', authRoutes);
+app.use('/api/employees', employeeRoutes);
 
 // Basic Health Check Route
 app.get('/api/health', async (req, res) => {

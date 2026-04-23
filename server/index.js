@@ -18,11 +18,13 @@ const authRoutes = require('./routes/auth');
 const employeeRoutes = require('./routes/employees');
 const shiftRoutes = require('./routes/shifts');
 const attendanceRoutes = require('./routes/attendance');
+const leaveRoutes = require('./routes/leaves');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
 app.use('/api/shifts', shiftRoutes);
 app.use('/api/attendance', attendanceRoutes);
+app.use('/api/leaves', leaveRoutes);
 
 // Basic Health Check Route
 app.get('/api/health', async (req, res) => {

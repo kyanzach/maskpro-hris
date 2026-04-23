@@ -37,13 +37,16 @@ description:
 5. **Shared Database Rule**: NEVER DROP or ALTER existing tables from the `unify_maskpro` schema unless strictly necessary for HRIS integration. Prefix new tables with `hr_` (e.g., `hr_employees`, `hr_attendance`, `hr_leaves`).
 6. NEVER use native system dialogs (`alert()`, `confirm()`, `prompt()`) — use modern UI components.
 7. MaskPro Care and Unify share `unify_maskpro` DB — only touch HRIS-owned tables, never Unify or Care's tables unexpectedly.
-8. ALL SSH/rsync commands MUST use `sshpass` pattern: `SSHPASS="777Godisgood" sshpass -e ssh -o StrictHostKeyChecking=no root@167.71.217.49 "command"`.
+8. **ALL SSH/rsync commands MUST use `sshpass` pattern**: `SSHPASS="777Godisgood" sshpass -e ssh -o StrictHostKeyChecking=no root@167.71.217.49 "command"`. If sshpass is missing locally, you must compile it: `mkdir -p /tmp/sshpass_build && cd /tmp/sshpass_build && curl -sSLk -O https://sourceforge.net/projects/sshpass/files/sshpass/1.10/sshpass-1.10.tar.gz && tar xzf sshpass-1.10.tar.gz && cd sshpass-1.10 && ./configure --prefix=/tmp/ssh && make && make install && export PATH="/tmp/ssh/bin:$PATH"`.
 9. NEVER use `rsync --delete` for deployment. Additive only.
 10. **Legacy Reference ONLY**: We use the legacy application at `/Applications/XAMPP/xamppfiles/htdocs/payday.maskpro.ph` for studying data models, migrations, and underlying business logic. However, **DO NOT copy the code directly**. We are building a robust, high-performance Vite/React application. You must explicitly enhance the system architecture and provide a premium, modern 2026 UX/UI.
+11. **Sister Apps STRICT COMPLIANCE**: HRIS shares the server with `unify-vite` (3007), `getsales` (3002/3005), `gaq` (3003), and `maskpro-care` (3004). NEVER modify their PM2 processes, databases, or directory structures. Operate strictly within the bounds of the new HRIS port allocation (**Port 3001**) and `/var/www/hris/` directory.
+12. **Database SQL Sharing**: HRIS exclusively uses the `unify_maskpro` database. All new HRIS tables must have the `hr_` prefix.
+13. **Strict Timezone Compliance**: All server time, database time, application platform time, and biometrics processing MUST strictly operate in **GMT+8 (Asia/Manila) Philippines Standard Time**. Never default to UTC or server-local time.
 
 ## Database Schema Constraints
 - Ensure `user_id` mapping correctly links HRIS employees to `users` table from Unify if they have system access, or maintain a separate `hr_employees` table that optionally links to `users.id`.
-- Timezone handling MUST be strict. The biometric device operates in Asia/Manila (UTC+8). Server DB is configured for UTC/Manila accordingly.
+- Timezone handling MUST be strict. The biometric device operates in Asia/Manila (UTC+8). Server DB is configured for UTC/Manila accordingly. Always force PHP/Node environments to `Asia/Manila`.
 
 ## Git & Versioning
 - Check `CHANGELOG.md` at session start.

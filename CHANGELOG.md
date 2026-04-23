@@ -1,3 +1,7 @@
+## [v1.0.1] — 2026-04-23
+### Fixed
+- Enforced strict GMT+8 (Asia/Manila) timezone compliance in Node.js environment and MySQL connection pool
+
 ## [v1.0.0] — 2026-04-23
 ### Added
 - Initialized Vite + React frontend for HRIS application

@@ -16,6 +16,28 @@
 
 ---
 
+## 🖥️ Production Server (DigitalOcean — Shared Droplet)
+
+| Key | Value |
+|-----|-------|
+| **IP** | `167.71.217.49` |
+| **Path** | `/var/www/hris/` (Pending Setup) |
+| **DB** | `unify_maskpro` (Shared) |
+| **Server** | Ubuntu 22.04 |
+
+### Sister Apps on This Droplet — DO NOT TOUCH
+| App | PM2 Process | Port | DB | Path |
+|-----|-------------|------|----|------|
+| Unify Vite | `unify-vite` | 3007 | `unify_maskpro` (**shared!**) | `/var/www/unify-vite/` |
+| GetSales | `maskpro-api` | 3002 | `maskpro_commissions` | `/var/www/getsales/` |
+| GetSales SSR | `getsales-public` | 3005 | (same) | `/var/www/getsales/public-web/` |
+| GAQ | `gaq-api` | 3003 | `maskpro_quotations` | `/var/www/gaq/` |
+| MaskPro Care | `maskpro-care` | 3004 | `unify_maskpro` (**shared!**) | `/var/www/care/` |
+
+> ⚠️ **STRICT COMPLIANCE:** NEVER modify the PM2 processes, databases, or directory structures of the sister apps listed above. When executing PM2 restarts or managing ports, ensure you are strictly working within the bounds of the new `hris` port allocation.
+
+---
+
 ## 🗂️ Core Navigation & Feature Modules
 
 Based on the Payday layout and administrative requirements, the HRIS will feature the following core navigation structure:
@@ -91,3 +113,18 @@ To prevent collisions with Unify while maintaining relationship integrity, all t
 - The Cordya device acts as a ZKTeco OEM device. It uses the ZK Protocol.
 - **Node.js Libraries**: `node-zklib` or `zkteco-js`.
 - The mini-PC will act as a bridge. It will run a Node.js daemon that periodically (e.g., every 5 minutes) connects to the Cordya device IP over port 4370, downloads new attendance records (`getAttendances()`), clears them from the device if necessary, and pushes them to the HRIS API.
+
+### ⚠️ SSH & Deployment Warnings (CRITICAL)
+- **ALL remote commands MUST use `sshpass`** — never use bare `ssh` or `rsync` as it causes interactive password prompts which will freeze deployment scripts.
+- **SCP is Broken via `sshpass`**: Running `sshpass -e scp` fails with "Permission denied". 
+  - **Workaround**: Pipe file content via SSH stdin instead: `SSHPASS="..." sshpass -e ssh root@167.71.217.49 "cat > /tmp/migration.sql" < local_file.sql`
+- **Missing `sshpass` Locally**: If `sshpass` is not installed on the local runner, you MUST compile it from source before running any remote commands:
+  ```bash
+  mkdir -p /tmp/sshpass_build && cd /tmp/sshpass_build && curl -sSLk -O https://sourceforge.net/projects/sshpass/files/sshpass/1.10/sshpass-1.10.tar.gz && tar xzf sshpass-1.10.tar.gz && cd sshpass-1.10 && ./configure --prefix=/tmp/ssh && make && make install && export PATH="/tmp/ssh/bin:$PATH"
+  ```
+
+### ⏰ Strict Timezone Compliance
+All server configurations, project files, application logic, and database connections MUST strictly adhere to **GMT+8 (Asia/Manila) Philippines Standard Time**.
+- **Never default to UTC**.
+- Force Node.js/PHP processes to strictly use `Asia/Manila`.
+- Since biometric punches are extremely time-sensitive (Lates/Undertime calculation), timezone discrepancy will silently corrupt HR data.

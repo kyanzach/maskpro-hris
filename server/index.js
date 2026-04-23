@@ -1,4 +1,8 @@
 require('dotenv').config();
+
+// STRICT TIMEZONE COMPLIANCE: Force Node.js environment to Asia/Manila
+process.env.TZ = 'Asia/Manila';
+
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
@@ -18,7 +22,9 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  timezone: '+08:00', // STRICT TIMEZONE COMPLIANCE: Force MySQL session to Asia/Manila
+  dateStrings: true // Return dates as strings to avoid JS Date object timezone shifts
 });
 
 // Basic Health Check Route

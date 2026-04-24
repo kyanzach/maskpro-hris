@@ -6,7 +6,7 @@ import Login from './pages/Login';
 import JobDesk from './pages/JobDesk';
 import { AllEmployees, Designations, EmploymentStatus, Departments, Holiday, Announcements, Assets } from './pages/EmployeePages';
 import { LeaveStatus, LeaveRequest, LeaveCalendar, LeaveSummary } from './pages/LeavePages';
-import { RateMatrix, ImagePayslips } from './pages/PlaceholderPages';
+import { WorkShifts, RateMatrix, ImagePayslips } from './pages/PlaceholderPages';
 import { AttendanceDailyLog, AttendanceDetails, AttendanceRequest } from './pages/AttendancePages';
 import { Payrun, Payslip, Beneficiary, AccountingBatch, UsersRoles, OrgStructure, BiometricManager, UnifySync, AppSettings, LeaveSettings, AttendanceSettings, PayrollSettings, Import } from './pages/AdminPages';
 import { ProfileSettings } from './pages/ProfileSettings';

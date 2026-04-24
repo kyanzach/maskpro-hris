@@ -29,7 +29,7 @@ router.post('/', authorize(['admin', 'hr']), async (req, res) => {
 
         const [result] = await pool.query(
             'INSERT INTO hr_shifts (name, start_time, end_time, late_grace_period_mins, is_default) VALUES (?, ?, ?, ?, ?)',
-            [name, start_time, end_time, late_grace_period_mins || 15, is_default || false]
+            [name, start_time, end_time, late_grace_period_mins ?? 15, is_default || false]
         );
 
         res.json({ success: true, message: 'Shift created successfully', id: result.insertId });
@@ -53,7 +53,7 @@ router.put('/:id', authorize(['admin', 'hr']), async (req, res) => {
 
         await pool.query(
             'UPDATE hr_shifts SET name = ?, start_time = ?, end_time = ?, late_grace_period_mins = ?, is_default = ? WHERE id = ?',
-            [name, start_time, end_time, late_grace_period_mins || 15, is_default || false, id]
+            [name, start_time, end_time, late_grace_period_mins ?? 15, is_default || false, id]
         );
 
         res.json({ success: true, message: 'Shift updated successfully' });

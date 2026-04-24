@@ -1,3 +1,7 @@
+## [v1.6.1] — 2026-04-24
+### Added / Changed / Fixed
+- **Fix (Admin):** Fixed an issue where setting a Work Shift's late grace period to `0` would default back to 15 minutes. It now strictly accepts `0` tolerance late configurations.
+
 ## [v1.6.0] — 2026-04-24
 ### Added / Changed / Fixed
 - **Feature (Daily Time Record):** Implemented the backend DTR processing engine. It automatically maps raw biometric logs into a 4-punch structure (In Time, Break Out, Break In, Out Time) to calculate late minutes and total work hours accurately against the employee's assigned Work Shift.
